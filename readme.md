@@ -218,7 +218,7 @@ grin.node.service - Grin Node Service
 We need to obtain a shared key to be able to communicate securely with the API, for this we will use the [private key generated previously](#generating-a-private-key). Run the next command and pass the path of the PEM file of the private key:
 
 ```bash
-python scripts/python/get_wallet_api_shared_secret.py private_key.pem 2> /dev/null > ~/.grin/$CHAIN/.shared_secret
+python scripts/python/$CHAIN/get_shared_secret.py private_key.pem 2> /dev/null > ~/.grin/$CHAIN/.shared_secret
 ```
 
 The secret key will be written on the next path `~/.grin/$CHAIN/.shared_secret` you can confirm that everything is OK by displaying the content of the file:
