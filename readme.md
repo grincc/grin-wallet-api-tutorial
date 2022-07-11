@@ -25,6 +25,7 @@
     - [Listing wallet accounts](#listing-wallet-accounts)
     - [Setting the top level directory](#setting-the-top-level-directory)
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
+    - [Getting stored Transactions](#getting-stored-transactions)
 
 ## Introduction
 
@@ -834,7 +835,7 @@ The slate should be encoded now `create_slatepack_message` which creates a slate
 Example:
 
 ```bash
-./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+./scripts/bash/$CHAIN/create_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
 ```
 
 This returned Slatepack Message can be shared now with the receiver. The transaction needs to be finalized now.
@@ -879,7 +880,7 @@ $ ./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_se
 Now we pass the slate to the `finalize_tx` method to finalized the transaction.
 
 ```bash
-./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json > finalized.slate.json
 ```
 
 The returned slate must be [posted](#posting-a-transaction).
@@ -889,7 +890,7 @@ The returned slate must be [posted](#posting-a-transaction).
 Transactions need to be broadcasted. For this we need to call the `post_tx` method, this method post a completed transaction to the listening node for validation and inclusion in a block for mining. This method receives a `slate` and a `token`.
 
 ```bash
-./scripts/bash/$CHAIN/post_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+./scripts/bash/$CHAIN/post_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) finalized.slate.json
 ```
 
 ## Extras
@@ -1000,4 +1001,27 @@ To get the seed phrase call the method `get_mnemonic` like this:
 
 ```bash
 ./scripts/bash/$CHAIN/get_mnemonic.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+### Getting stored Transactions
+
+In order to get a stored transaction we could use the transaction slate id as a parameter for the `get_stored_tx` method like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "get_stored_tx",
+    "id": 1,
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "id": null,
+        "slate_id": "0436430c-2b02-624c-2032-570501212b00"
+    }
+}
+```
+
+Example:
+
+```bash
+./scripts/bash/$CHAIN/get_stored_tx.sh.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "b0b35789-4e91-4344-9c8a-10a7c1fa7cff"
 ```
