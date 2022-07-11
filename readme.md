@@ -166,6 +166,8 @@ Also if you want to run your node in a separate server from the wallet which is 
 api_http_addr = "192.168.0.10:3413"
 ```
 
+NOTE: Make sure you are using your own IP.
+
 Now creates a file on `/etc/systemd/system/grin.node.service` and paste the next content:
 
 ```ini
