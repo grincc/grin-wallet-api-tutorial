@@ -12,8 +12,13 @@
   - [Opening a Wallet](#opening-a-wallet)
   - [Retrieving last known Height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
-  - [Optional](#optional)
+  - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
+  - [Extras](#extras)
+    - [Create an account inside a wallet](#create-an-account-inside-a-wallet)
+    - [Setting the active account](#setting-the-active-account)
+    - [Listing wallet accounts](#listing-wallet-accounts)
     - [Setting the top level directory](#setting-the-top-level-directory)
+    - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
 
 ## Introduction
 
@@ -494,7 +499,150 @@ $ echo $spendable
 0
 ```
 
-## Optional
+## Getting the wallet address (Slatepack Address)
+
+A Slatepack address is a bech32 encoded address, similar to those used in Bitcoin. However, Slatepack addresses do not touch the network; they are used strictly for transaction building between two wallets, and never appear on-chain or represent ownership. Addresses are exchanged between parties to serve as instructions for how to complete the payment. Therefore, a Slatepack address serves a double purpose:
+
+- It decodes to a Tor address.
+- Acts as a key to encrypt the transaction data being communicated by Slatepack Messages (strings).
+
+To retrieve the public slatepack address associated with the active account at the given derivation path, you just need to call the method `get_slatepack_address` like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "get_slatepack_address",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "derivation_index": 0
+    },
+    "id": 1
+}
+```
+
+In this case, an "address" means a Slatepack Address corresponding to a private key derived as follows:
+
+e.g. The default parent account is at `m/0/0`
+
+With output blinding factors created as
+
+```text
+m/0/0/0 m/0/0/1 etc...
+```
+
+The corresponding public address derivation path would be at: `m/0/1`
+
+With addresses created as:
+
+```text
+m/0/1/0 m/0/1/1 etc...
+```
+
+Note that these addresses correspond to the public keys used in the addresses of TOR hidden services configured by the wallet listener.
+
+Example using `derivation_index = 0`:
+
+```bash
+./scripts/bash/$CHAIN/get_slatepack_address.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) 0
+```
+
+Output:
+
+```text
+grin14r5a3cqcc5v8mqpagsr28nt4c0uap9zfcpxmgfsqpc2xzan0uh9qp9ykf2
+```
+
+Example using `derivation_index = 1`:
+
+```bash
+./scripts/bash/$CHAIN/get_slatepack_address.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) 1
+```
+
+Output:
+
+```text
+grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
+```
+
+## Extras
+
+### Create an account inside a wallet
+
+An `account` is a mapping of a user-specified label to a [BIP32 path](https://wiki.trezor.io/Address_path_(BIP32)). The Address path (BIP32) defines how to derive private and public keys of a wallet from a binary master seed (m) and an ordered set of indices.
+
+This can be done using the method `create_account_path` and the json structure is the follow:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "create_account_path",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "label": "account1"
+    },
+    "id": 1
+}
+```
+
+Where `token` is the token of the opened wallet and `label` is  human readable label to which to map the new BIP32 Path.
+
+```bash
+./scripts/bash/$CHAIN/create_account_path.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+### Setting the active account
+
+You just need to call the method: `create_account_path` with the json structure like the follow:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "set_active_account",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "label": "account1"
+    },
+    "id": 1
+}
+```
+
+Where `token` is the token of the opened wallet and `label` is  human readable label of the BIP32 Path. The default label is `default`.
+
+```bash
+./scripts/bash/$CHAIN/set_active_account.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+### Listing wallet accounts
+
+This can be done using the method `accounts` and the json structure is the follow:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "accounts",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+    },
+    "id": 1
+}
+```
+
+Where `token` is the token of the opened wallet.
+
+```bash
+./scripts/bash/$CHAIN/accounts.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Output:
+
+```text
+[
+  {
+    "label": "default",
+    "path": "0200000000000000000000000000000000"
+  }
+]
+```
 
 ### Setting the top level directory
 
@@ -502,4 +650,26 @@ You can specify the directory where the wallet information will be stored. If yo
 
 ```bash
 ./scripts/bash/$CHAIN/set_top_level_directory.sh $(cat ~/.grin/$CHAIN/.shared_secret)
+```
+
+### Getting the wallet seed phrase or recovery phrase
+
+A recovery phrase (sometimes known as a seed phrase) is a series of words generated by your cryptocurrency wallet that gives you access to the crypto associated with that wallet. Think of a wallet as being similar to a password manager for crypto, and the recovery phrase as being like the master password. As long as you have your recovery phrase, you'll have access to all of the crypto associated with the wallet that generated the phrase - even if you delete or lose the wallet.
+
+To get the seed phrase call the method `get_mnemonic` like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "get_mnemonic",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "password": "my_secret_password"
+    },
+    "id": 1
+}
+```
+
+```bash
+./scripts/bash/$CHAIN/get_mnemonic.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
 ```
