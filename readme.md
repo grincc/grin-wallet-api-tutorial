@@ -13,9 +13,9 @@
   - [Retrieving last known Height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
-  - [Receiving transaction](#receiving-transaction)
+  - [Receiving a transaction](#receiving-a-transaction)
   - [Listing transactions](#listing-transactions)
-  - [Canceling transaction](#canceling-transaction)
+  - [Canceling a transaction](#canceling-a-transaction)
   - [Sending a transaction](#sending-a-transaction)
     - [Finalizing a transaction](#finalizing-a-transaction)
     - [Posting a transaction](#posting-a-transaction)
@@ -570,7 +570,7 @@ Output:
 grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
 ```
 
-## Receiving transaction
+## Receiving a transaction
 
 A Slate contains its own separate representation of Grin's internal Transaction object, this object is encoded within the Slatepack Message therefore the first step is to decode the slatepack. To get the Slate from the Slatepack Message, we need to call `slate_from_slatepack_message` like this:
 
@@ -738,7 +738,7 @@ Output:
 ]
 ```
 
-## Canceling transaction
+## Canceling a transaction
 
 In order to cancel a transaction we could use the transaction slate id as a parameter for the `cancel_tx` method like this:
 
