@@ -679,7 +679,7 @@ Example:
 ./scripts/bash/$CHAIN/create_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) signed_slate.json
 ```
 
-This Slatepack Message must then be shared with the Sender.
+This generated Slatepack Message must then be shared with the Sender.
 
 ## Listing transactions
 
@@ -830,10 +830,10 @@ The JSON structure of the call looks as follows:
 
 This method returns the transaction Slate, which can be forwarded to the recieving party by any means after encoding the information into a Slatepack Message.
 
-Example:
+Example of sending 0.1 grins:
 
 ```bash
-
+./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
 The slate should be encoded now `create_slatepack_message` which creates a slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
@@ -841,7 +841,7 @@ The slate should be encoded now `create_slatepack_message` which creates a slate
 Example:
 
 ```bash
-
+./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
 This returned Slatepack Message can be shared now with the receiver.
