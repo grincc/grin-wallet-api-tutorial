@@ -41,16 +41,28 @@ NOTE: In every command replace $VERSION with the **appropriate stable version** 
 
 ## Starting node and wallet APIs
 
-Now, open 3 new tabs from your terminal. In the first tab, run the node with the next command:
+Now, open 3 new tabs from your terminal. In the first tab, run the node with the next command for Mainnet:
 
 ```bash
 grin
 ```
 
-In the second tab, you need need to start the wallet api:
+For Testnet:
+
+```bash
+grin --testnet
+```
+
+In the second tab, you need need to start the wallet api, for Mainnet:
 
 ```bash
 grin-wallet owner_api --run_foreign
+```
+
+For Testnet:
+
+```bash
+grin-wallet --testnet owner_api --run_foreign
 ```
 
 Use the third tabs to go through the next steps.
@@ -168,7 +180,19 @@ api_http_addr = "192.168.0.10:3413"
 
 NOTE: Make sure you are using your own IP.
 
-Now creates a file on `/etc/systemd/system/grin.node.service` and paste the next content inside:
+Create a file here: `/etc/.grinconf` with this content for Mainnet:
+
+```bash
+$CHAIN_TYPE=""
+```
+
+Or this for Testnet:
+
+```bash
+$CHAIN_TYPE="--testnet"
+```
+
+This will tell the node which is the desired chain. Now create a file on `/etc/systemd/system/grin.node.service` and paste the next content inside:
 
 ```ini
 [Unit]
@@ -177,7 +201,8 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/grin
+EnvironmentFile=/etc/.grinconf
+ExecStart=/usr/local/bin/grin $CHAIN_TYPE
 Restart=always
 User=root
 Group=root
@@ -227,7 +252,7 @@ The secret key will be written on the next path `~/.grin/$CHAIN/.shared_secret` 
 ls -lh ~/.grin/$CHAIN/.shared_secret
 ```
 
-It should be a 65 bytes file:
+It should be a 64 bytes file:
 
 ```text
 -rw-r--r--  1 david  staff    64B Jul 10 16:02 /Users/david/.grin/$CHAIN/.shared_secret
