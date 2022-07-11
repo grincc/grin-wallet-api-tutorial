@@ -37,7 +37,7 @@ sudo tar -C /usr/local/bin -xzf grin-v5.1.2-linux-amd64.tar.gz --strip-component
 sudo tar -C /usr/local/bin -xzf grin-wallet-v5.1.0-linux-amd64.tar.gz --strip-components=1
 ```
 
-NOTE: In every command replace $VERSION with the **appropriate stable version** for each binary, e.g. v5.1.2
+NOTE: In every command replace `v5.1.0` with the **appropriate stable version** for each binary, e.g. v5.1.2
 
 ## Starting node and wallet APIs
 
