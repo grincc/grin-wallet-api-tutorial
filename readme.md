@@ -626,7 +626,7 @@ This function creates a single output for the full amount, set to a status of 'A
 
 Also creates a corresponding Transaction Log Entry in the wallet's transaction log.
 
-The parameters for this method are the next:
+The positional parameters for this method are the next:
 
 - `slate` - The transaction Slate. The slate should contain the results of the sender's round 1 (e.g, public nonce and public excess value).
 - `dest_acct_name` - The name of the account into which the slate should be received. If None, the default account is used.
@@ -641,6 +641,28 @@ You can use one of the bash script inside this repository like this:
 Where `default` is the account and `slate.json` is the file where we store the slate. This will return a Slatepack Message. This returned Slatepack Message must then be shared with the Sender.
 
 ## Listing transactions
+
+The `retrieve_txs` method returns a list of Transaction Log Entries from the active account in the wallet. Parameters are the follow:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "retrieve_txs",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "refresh_from_node": true,
+        "tx_id": null,
+        "tx_slate_id": null
+    },
+    "id": 1
+}
+```
+
+- `refresh_from_node` - If true, the wallet will attempt to contact a node. If false, the results will contain transaction information that may be out-of-date (from the last time the wallet's output set was refreshed against the node).
+- `tx_id` - If Some(i), only return the transactions associated with the transaction log entry of id i.
+- `tx_slate_id` - If some (uuid), only return transactions associated with the given Slate uuid.
+
+Example:
 
 ```bash
 ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
