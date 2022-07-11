@@ -400,6 +400,83 @@ $ echo $header_hash $height $updated_from_node
 0001a006818e60dca117b22ee7df973330e260eb37bd74197e4e84490af138f0 1825828 true
 ```
 
+## Getting wallet balance
+
+To get the summary information from the active account in the wallet the method name is: `retrieve_summary_info`. The parameters are: `token`, `refresh_from_node` and `minimum_confirmations`:
+
+- `token` - Token of the opened wallet.
+- `refresh_from_node` - If true, the wallet will attempt to contact a node (via the NodeClient provided during wallet instantiation). If false, the results will contain transaction information that may be out-of-date (from the last time the wallet's output set was refreshed against the node). Note this setting is ignored if the updater process is running via a call to start_updater
+- `minimum_confirmations` - The minimum number of confirmations an output should have before it's included in the 'amount_currently_spendable' total
+
+The structure must be like this for example:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "retrieve_summary_info",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "refresh_from_node": true,
+        "minimum_confirmations": 1
+    },
+    "id": 1
+}
+```
+
+Inside the `script` folder there is a helper for this:
+
+```bash
+./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Example output:
+
+```json
+[
+  true,
+  {
+    "amount_awaiting_confirmation": "0",
+    "amount_awaiting_finalization": "0",
+    "amount_currently_spendable": "0",
+    "amount_immature": "0",
+    "amount_locked": "0",
+    "amount_reverted": "0",
+    "last_confirmed_height": "1825853",
+    "minimum_confirmations": "1",
+    "total": "0"
+  }
+]
+```
+
+- The first element is a boolean element and indicates whether the data was successfully refreshed from the node (note this may be false even if the `refresh_from_node` argument was set to true.
+- The second element contains the Summary Wallet Information.
+
+Again, you can use `jq` to parse the output; if you want to know whether or not the data was successfully refreshed from the node you can do it like this:
+
+```bash
+refreshed=$(./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[0]')
+```
+
+If you echo `$refreshed` you should see something like this:
+
+```text
+$ echo $refreshed
+true
+```
+
+To get the spenable balance you can do it also using `jq`:
+
+```bash
+spendable=$(./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.[1].amount_currently_spendable')
+```
+
+Example:
+
+```text
+$ echo $spendable
+0
+```
+
 ## Optional
 
 ### Setting the top level directory
