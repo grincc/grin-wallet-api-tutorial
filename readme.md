@@ -37,7 +37,7 @@ sudo tar -C /usr/local/bin -xzf grin-v5.1.2-linux-amd64.tar.gz --strip-component
 sudo tar -C /usr/local/bin -xzf grin-wallet-v5.1.0-linux-amd64.tar.gz --strip-components=1
 ```
 
-NOTE: In every command replace `v5.1.0` with the **appropriate stable version** for each binary. For the node go [here](https://github.com/mimblewimble/grin/releases) and for the wallet go [here](https://github.com/mimblewimble/grin-wallet/releases).
+NOTE: In every command replace `v5.1.2` and `v5.1.0` with the **appropriate stable version** for each binary. For the node go [here](https://github.com/mimblewimble/grin/releases) and for the wallet go [here](https://github.com/mimblewimble/grin-wallet/releases).
 
 ## Starting node and wallet APIs
 
