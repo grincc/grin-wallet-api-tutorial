@@ -65,6 +65,8 @@ For Testnet:
 grin-wallet --testnet owner_api --run_foreign
 ```
 
+The Owner API is intended to expose methods that are to be used by the wallet owner only and the "Foreign" API contains methods that other wallets will use to interact with the owner's wallet.
+
 Use the third tabs to go through the next steps.
 
 ## Generating a private key
