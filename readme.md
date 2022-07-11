@@ -165,7 +165,7 @@ source .venv/bin/activate
 After activating the virtual environment we need to be install all dependencies. In order to do so, execute the next command:
 
 ```bash
-pip install requests pycryptodome ecdsa
+pip install -r requirements.txt
 ```
 
 NOTE: All the steps below must be followed inside the virtual environment.
