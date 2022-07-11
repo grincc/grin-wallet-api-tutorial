@@ -288,7 +288,7 @@ Now that the wallet is created we can open it. This means that we can interact w
 
 ### Setting the top level directory
 
-Now we need to specify the directory where the wallet information will be stored. If you are not using an [encrypted volume](https://guardianproject.info/archive/luks/) at least, try to use an [encrypted filesystem in user-space](https://github.com/vgough/encfs). To do this, we need to call the `set_top_level_directory` endpoint.
+You can specify the directory where the wallet information will be stored. If you are not using an [encrypted volume](https://guardianproject.info/archive/luks/) at least, try to use an [encrypted filesystem in user-space](https://github.com/vgough/encfs). To do this, we need to call the `set_top_level_directory` endpoint.
 
 ```bash
 ./scripts/bash/$CHAIN/set_top_level_directory.sh $(cat ~/.grin/$CHAIN/.shared_secret)
