@@ -17,7 +17,7 @@
 
 ## Introduction
 
-In this document will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
+This document will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
 
 - AES-256 in GCM mode with 128-bit tags and 96 bit nonces
 - 12 byte nonce which must be included in each request/response to use on the decrypting side
