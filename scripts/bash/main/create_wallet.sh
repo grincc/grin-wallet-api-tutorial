@@ -2,6 +2,9 @@
 
 iv=$(openssl rand -hex 12)
 echo -n "Password for the wallet: "; read -s password
+echo ""
+echo -n "Confirm Password: "; read -s password_confirmation
+[[ "$password" != "$password_confirmation" ]] && echo "Passwords are not equal" && exit 1
 payload=$(echo "{\"id\":\"$iv\",\"method\":\"create_wallet\",\"params\":{\"name\":null,\"mnemonic\":null,\"mnemonic_length\":32,\"password\":\"$password\"}}")
 payload=$(.venv/bin/python ./scripts/python/encrypt.py "$1" "$iv" "$payload")
 unset password
@@ -12,6 +15,8 @@ echo ""
 if $(echo $result | jq 'has("error")')
 then
     echo $result | jq .error.message
+    exit 1
 else
     echo "Wallet created"
 fi
+exit 0

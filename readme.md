@@ -317,11 +317,37 @@ drwxr-xr-x  5 david  staff   160B Jul 10 16:20 wallet_data
 
 ## Opening a Wallet
 
-Now that the wallet is created we can open it. This means that we can interact with the wallet.
+Now that the wallet is created we can open it. This means that we can interact with the wallet. In order to do so we need a `token`, this token will be used as a parameter for those calls that are related to the wallet. To get this token we need to call the `open_wallet` method with the next parameters:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "open_wallet",
+    "params": {
+        "name": null,
+        "password": "my_secret_password"
+    },
+    "id": 1
+}
+```
+
+The parameter `name`is the name of the wallet, this parameter can be `null` for now, and `password` is the password of the wallet.
 
 ```bash
-./scripts/bash/$CHAIN/open_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret)
+./scripts/bash/$CHAIN/open_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret) .wallet_token
 ```
+
+This will print an output like this for example, then we are going to use `cat` to confirm the value token stored in the file:
+
+```text
+$ ./scripts/bash/$CHAIN/open_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret) .wallet_token
+Password of the wallet:
+Wallet opened [token=206fe2b943656b4ebc75c67931b327437f0713180d79f30a526d7a0b1a34692b]
+$ cat .wallet_token
+206fe2b943656b4ebc75c67931b327437f0713180d79f30a526d7a0b1a34692b
+```
+
+We need the token to execute most of the call within the Owner API.
 
 ## Optional
 

@@ -17,5 +17,6 @@ if $(echo $result | jq 'has("error")')
 then
     echo $result | jq .error.message
 else
-    echo $result | jq .result
+    echo "Config created"
 fi
+exit 0

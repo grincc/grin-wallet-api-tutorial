@@ -10,7 +10,8 @@ result=$(.venv/bin/python ./scripts/python/decrypt.py $1 $nonce $body_enc)
 if $(echo $result | jq 'has("error")')
 then
     echo $result | jq .error.message
+    exit 1
 else
     echo $result | jq .result.Ok | tr -d '"'
 fi
-
+exit 0
