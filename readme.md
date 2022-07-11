@@ -13,9 +13,10 @@
   - [Retrieving last known Height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
-  - [Sending coins](#sending-coins)
-  - [Receiving coins](#receiving-coins)
+  - [Receiving transaction](#receiving-transaction)
   - [Listing transactions](#listing-transactions)
+  - [Canceling transaction](#canceling-transaction)
+  - [Sending transaction](#sending-transaction)
   - [Extras](#extras)
     - [Create an account inside a wallet](#create-an-account-inside-a-wallet)
     - [Setting the active account](#setting-the-active-account)
@@ -102,7 +103,7 @@ For Testnet:
 grin-wallet --testnet owner_api --run_foreign
 ```
 
-The Owner API is intended to expose methods that are to be used by the wallet owner only and the "Foreign" API contains methods that other wallets will use to interact with the owner's wallet.
+The Owner API is intended to expose methods that are to be used by the wallet owner only and the Foreign API contains methods that other wallets will use to interact with the owner's wallet.
 
 Use the third tabs to go through the next steps.
 
@@ -567,15 +568,172 @@ Output:
 grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
 ```
 
-## Sending coins
+## Receiving transaction
 
-## Receiving coins
+A Slate contains its own separate representation of Grin's internal Transaction object, this object is encoded within the Slatepack Message therefore the first step is to decode the slatepack. To get the Slate from the Slatepack Message, we need to call `slate_from_slatepack_message` like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "slate_from_slatepack_message",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "secret_indices": [0],
+        "message": "BEGINSLATEPACK. 8GQrdcwdLKJD28F 3a9siP7ZhZgAh7w BR2EiZHza5WMWmZ Cc8zBUemrrYRjhq j3VBwA8vYnvXXKU BDmQBN2yKgmR8mX UzvXHezfznA61d7 qFZYChhz94vd8Ew NEPLz7jmcVN2C3w wrfHbeiLubYozP2 uhLouFiYRrbe3fQ 4uhWGfT3sQYXScT dAeo29EaZJpfauh j8VL5jsxST2SPHq nzXFC2w9yYVjt7D ju7GSgHEp5aHz9R xstGbHjbsb4JQod kYLuELta1ohUwDD pvjhyJmsbLcsPei k5AQhZsJ8RJGBtY bou6cU7tZeFJvor 4LB9CBfFB3pmVWD vSLd5RPS75dcnHP nbXD8mSDZ8hJS2Q A9wgvppWzuWztJ2 dLUU8f9tLJgsRBw YZAs71HiVeg7. ENDSLATEPACK."
+    },
+    "id": 1
+}
+```
+
+`message` - A string representing an armored slatepack.
+`secret_indices` - Indices along this wallet's deriviation path with which to attempt decryption. This function will attempt to use secret keys at each index along this path to attempt to decrypt the payload, returning an error if none of the keys match.
+
+To see an example run the next:
+
+```bash
+./scripts/bash/$CHAIN/slate_from_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Example:
+
+```text
+$ ./scripts/bash/$CHAIN/slate_from_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) > slate.json
+BEGINSLATEPACK. 8GQrdcwdLKJD28F 3a9siP7ZhZgAh7w BR2EiZHza5WMWmZ Cc8zBUemrrYRjhq j3VBwA8vYnvXXKU BDmQBN2yKgmR8mX UzvXHezfznA61d7 qFZYChhz94vd8Ew NEPLz7jmcVN2C3w wrfHbeiLubYozP2 uhLouFiYRrbe3fQ 4uhWGfT3sQYXScT dAeo29EaZJpfauh j8VL5jsxST2SPHq nzXFC2w9yYVjt7D ju7GSgHEp5aHz9R xstGbHjbsb4JQod kYLuELta1ohUwDD pvjhyJmsbLcsPei k5AQhZsJ8RJGBtY bou6cU7tZeFJvor 4LB9CBfFB3pmVWD vSLd5RPS75dcnHP nbXD8mSDZ8hJS2Q A9wgvppWzuWztJ2 dLUU8f9tLJgsRBw YZAs71HiVeg7. ENDSLATEPACK.
+$ cat slate.json
+{
+  "amt": "6000000000",
+  "fee": "8000000",
+  "id": "0436430c-2b02-624c-2032-570501212b00",
+  "off": "d202964900000000d302964900000000d402964900000000d502964900000000",
+  "proof": {
+    "raddr": "783f6528669742a990e0faf0a5fca5d5b3330e37bbb9cd5c628696d03ce4e810",
+    "saddr": "32cdd63928854f8b2628b1dce4626ddcdf35d56cb7cfdf7d64cca5822b78d4d3"
+  },
+  "sigs": [
+    {
+      "nonce": "031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f",
+      "xs": "023878ce845727f3a4ec76ca3f3db4b38a2d05d636b8c3632108b857fed63c96de"
+    }
+  ],
+  "sta": "S1",
+  "ver": "4:2"
+}
+```
+
+Next, we need to call the method: `receive_tx` from the Foreign API which recieve a tranaction created by another party, returning the modified Slate object, modified with the recipient's output for the transaction amount, and public signature data. This slate can then be sent back to the sender to finalize the transaction via the Owner API's finalize_tx method.
+
+This function creates a single output for the full amount, set to a status of 'Awaiting finalization'. It will remain in this state until the wallet finds the corresponding output on the chain, at which point it will become 'Unspent'. The slate will be updated with the results of Signing round 1 and 2, adding the recipient's public nonce, public excess value, and partial signature to the slate.
+
+Also creates a corresponding Transaction Log Entry in the wallet's transaction log.
+
+The parameters for this method are the next:
+
+- `slate` - The transaction Slate. The slate should contain the results of the sender's round 1 (e.g, public nonce and public excess value).
+- `dest_acct_name` - The name of the account into which the slate should be received. If None, the default account is used.
+- `r_addr` - If included, attempt to send the slate back to the sender using the slatepack sync send (TOR). If providing this argument, check the state field of the slate to see if the sync_send was successful (it should be S3 if the synced send sent successfully).
+
+You can use one of the bash script inside this repository like this:
+
+```bash
+./scripts/bash/$CHAIN/receive_tx.sh default slate.json
+```
+
+Where `default` is the account and `slate.json` is the file where we store the slate. This will return a Slatepack Message. This returned Slatepack Message must then be shared with the Sender.
 
 ## Listing transactions
 
 ```bash
-./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
 ```
+
+Output:
+
+```json
+[
+    {
+      "amount_credited": "800000000",
+      "amount_debited": "0",
+      "confirmation_ts": null,
+      "confirmed": false,
+      "creation_ts": "2022-07-11T13:43:36.570880Z",
+      "fee": null,
+      "id": 0,
+      "kernel_excess": "082cb678b271a4647f325fb77eb12f6387d8e456e33e7b8cf28eb00b498fdbf3e7",
+      "kernel_lookup_min_height": 1825982,
+      "num_inputs": 0,
+      "num_outputs": 1,
+      "parent_key_id": "0200000000000000000000000000000000",
+      "payment_proof": null,
+      "reverted_after": null,
+      "stored_tx": null,
+      "ttl_cutoff_height": null,
+      "tx_slate_id": "d3a57cb7-b40d-4c71-8e19-b3bc79d50be0",
+      "tx_type": "TxReceived"
+    }
+]
+```
+
+## Canceling transaction
+
+In order to cancel a transaction we could use the transaction slate id as a parameter for the `cancel_tx` method like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "cancel_tx",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "tx_id": null,
+        "tx_slate_id": "0436430c-2b02-624c-2032-570501212b00"
+    },
+    "id": 1
+}
+```
+
+Example:
+
+```bash
+./scripts/bash/$CHAIN/cancel_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "d3a57cb7-b40d-4c71-8e19-b3bc79d50be0"
+```
+
+Now if we check the status it should say `TxReceivedCancelled`:
+
+```text
+$ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
+[
+  {
+    "amount_credited": "800000000",
+    "amount_debited": "0",
+    "confirmation_ts": null,
+    "confirmed": false,
+    "creation_ts": "2022-07-11T13:43:36.570880Z",
+    "fee": null,
+    "id": 0,
+    "kernel_excess": "082cb678b271a4647f325fb77eb12f6387d8e456e33e7b8cf28eb00b498fdbf3e7",
+    "kernel_lookup_min_height": 1825982,
+    "num_inputs": 0,
+    "num_outputs": 1,
+    "parent_key_id": "0200000000000000000000000000000000",
+    "payment_proof": null,
+    "reverted_after": null,
+    "stored_tx": null,
+    "ttl_cutoff_height": null,
+    "tx_slate_id": "d3a57cb7-b40d-4c71-8e19-b3bc79d50be0",
+    "tx_type": "TxReceivedCancelled"
+  }
+]
+```
+
+## Sending transaction
+
+The Slatepack standard defines two methods methods:
+
+- **Synchronous** communication done through Tor (transaction is completed automatically similar to HTTPS).
+- **Asynchronous** communication using Slatepack Messages, which are encoded slate.
+
+The Slatepack standard automatically handles a failed Tor connection by outputting a Slatepack Message, which is an encoded Slate. Any Slatepack address is decoded by the wallet as a Tor address, where the wallet will be listening. Therefore, if both the exchange's and the user's wallets are online and connected to Tor, payments will complete automatically (the receiver's wallet needs to listen).
+
+However, if a Tor connection between the two wallets can't be established (fails for any reason), or when a Slatepack address is not provided, the wallet will resort to exchanging Slatepack Messages for completing a transaction.
 
 ## Extras
 
