@@ -638,7 +638,48 @@ You can use one of the bash script inside this repository like this:
 ./scripts/bash/$CHAIN/receive_tx.sh default slate.json
 ```
 
-Where `default` is the account and `slate.json` is the file where we store the slate. This will return a Slatepack Message. This returned Slatepack Message must then be shared with the Sender.
+Where `default` is the account and `slate.json` is the file where we store the slate. This will return a Slate which should be transformed into a Slatepack Message.
+
+To crete the Slatepack Message from the slate we need to call `create_slatepack_message` and pass the slate like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "create_slatepack_message",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "sender_index": 0,
+        "recipients": [],
+        "slate": {
+            "ver": "4:2",
+            "id": "0436430c-2b02-624c-2032-570501212b00",
+            "sta": "S1",
+            "off": "d202964900000000d302964900000000d402964900000000d502964900000000",
+            "amt": "60000000000",
+            "fee": "7000000",
+            "sigs": [
+                {
+                    "xs": "030152d2d72e2dba7c6086ad49a219d9ff0dfe0fd993dcaea22e058c210033ce93",
+                    "nonce": "031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f"
+                }
+            ]
+        }
+    },
+    "id": 1
+}
+```
+
+- `token` - Token of the opened wallet.
+- `sender_index` - If Some(n), the index along the derivation path to include as the sender
+- `recipients` - Optional recipients for which to encrypt the slatepack's payload (i.e. the slate). If it is empty, the payload will remain unencrypted
+
+Example:
+
+```bash
+./scripts/bash/$CHAIN/create_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) signed_slate.json
+```
+
+This Slatepack Message must then be shared with the Sender.
 
 ## Listing transactions
 
@@ -756,6 +797,54 @@ The Slatepack standard defines two methods methods:
 The Slatepack standard automatically handles a failed Tor connection by outputting a Slatepack Message, which is an encoded Slate. Any Slatepack address is decoded by the wallet as a Tor address, where the wallet will be listening. Therefore, if both the exchange's and the user's wallets are online and connected to Tor, payments will complete automatically (the receiver's wallet needs to listen).
 
 However, if a Tor connection between the two wallets can't be established (fails for any reason), or when a Slatepack address is not provided, the wallet will resort to exchanging Slatepack Messages for completing a transaction.
+
+The API method to start a transaction is: `init_send_tx`. This initiate a new transaction as the sender, creating a new Slate object containing the sender's inputs, change outputs, and public signature data. When a transaction is created, the wallet must also lock inputs (and create unconfirmed outputs) corresponding to the transaction created in the slate, so that the wallet doesn't attempt to re-spend outputs that are already included in a transaction before the transaction is confirmed.
+
+The JSON structure of the call looks as follows:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "init_send_tx",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000",
+        "args": {
+            "src_acct_name": null,
+            "amount": "6000000000",
+            "minimum_confirmations": 2,
+            "max_outputs": 500,
+            "num_change_outputs": 1,
+            "selection_strategy_is_use_all": true,
+            "target_slate_version": null,
+            "payment_proof_recipient_address": "tgrin1xtxavwfgs48ckf3gk8wwgcndmn0nt4tvkl8a7ltyejjcy2mc6nfs9gm2lp",
+            "ttl_blocks": null,
+            "send_args": null
+        }
+    },
+    "id": 1
+}
+```
+
+- `token`- Token of the opened wallet.
+- `args` - Transaction initialization arguments.
+
+This method returns the transaction Slate, which can be forwarded to the recieving party by any means after encoding the information into a Slatepack Message.
+
+Example:
+
+```bash
+
+```
+
+The slate should be encoded now `create_slatepack_message` which creates a slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
+
+Example:
+
+```bash
+
+```
+
+This returned Slatepack Message can be shared now with the receiver.
 
 ## Extras
 
