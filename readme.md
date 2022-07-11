@@ -834,7 +834,7 @@ The slate should be encoded now `create_slatepack_message` which creates a slate
 Example:
 
 ```bash
-./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
+./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
 ```
 
 This returned Slatepack Message can be shared now with the receiver. The transaction needs to be finalized now.
