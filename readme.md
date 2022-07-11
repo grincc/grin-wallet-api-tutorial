@@ -17,6 +17,8 @@
   - [Listing transactions](#listing-transactions)
   - [Canceling transaction](#canceling-transaction)
   - [Sending transaction](#sending-transaction)
+    - [Finalizing a transaction](#finalizing-a-transaction)
+    - [Posting a transaction](#posting-a-transaction)
   - [Extras](#extras)
     - [Create an account inside a wallet](#create-an-account-inside-a-wallet)
     - [Setting the active account](#setting-the-active-account)
@@ -844,7 +846,37 @@ Example:
 ./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
-This returned Slatepack Message can be shared now with the receiver.
+This returned Slatepack Message can be shared now with the receiver. The transaction needs to be finalized now.
+
+### Finalizing a transaction
+
+After all parties have filled in both rounds of Slate generation a transaction Finalized. This step adds all participants partial signatures to create the final signature, resulting in a final transaction that is ready to post to a node.
+
+Note that this function **DOES NOT POST the transaction** to a node for validation. This is done in separately via the `post_tx` function.
+
+To finalize the transaction `finalize_tx` must be called, this method receives a `slate` and a `token`.
+
+First, we need to get the slate from the Slatepack Message:
+
+```bash
+./scripts/bash/$CHAIN/slate_from_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Now we pass the slate to the `finalize_tx` method.
+
+```bash
+./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+```
+
+The returned slate can be now [posted](#posting-a-transaction).
+
+### Posting a transaction
+
+Transactions need to be broadcasted. For this we need to call the `post_tx` method, this method post a completed transaction to the listening node for validation and inclusion in a block for mining. This method receives a `slate` and a `token`.
+
+```bash
+./scripts/bash/$CHAIN/post_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+```
 
 ## Extras
 
