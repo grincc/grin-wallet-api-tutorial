@@ -1,6 +1,23 @@
-# How to communicate securely with the grin-wallet API
+# Communicating securely with grin-wallet API
 
-In this document I will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
+- [Communicating securely with grin-wallet API](#communicating-securely-with-grin-wallet-api)
+  - [Introduction](#introduction)
+  - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
+  - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
+  - [Generating a private key](#generating-a-private-key)
+  - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
+  - [Running Grin Node as a Service](#running-grin-node-as-a-service)
+  - [Obtaining the Shared Key](#obtaining-the-shared-key)
+  - [Creating a Wallet](#creating-a-wallet)
+  - [Opening a Wallet](#opening-a-wallet)
+  - [Retrieving last known Height](#retrieving-last-known-height)
+  - [Getting wallet balance](#getting-wallet-balance)
+  - [Optional](#optional)
+    - [Setting the top level directory](#setting-the-top-level-directory)
+
+## Introduction
+
+In this document will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
 
 - AES-256 in GCM mode with 128-bit tags and 96 bit nonces
 - 12 byte nonce which must be included in each request/response to use on the decrypting side
