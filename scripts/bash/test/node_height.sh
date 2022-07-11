@@ -12,6 +12,6 @@ then
     echo $result | jq .error.message
     exit 1
 else
-    echo $result | jq .result.Ok | tr -d '"'
+    echo $result | jq .result.Ok
 fi
 exit 0

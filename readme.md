@@ -349,6 +349,57 @@ $ cat .wallet_token
 
 We need the token to execute most of the call within the Owner API.
 
+## Retrieving last know Height
+
+To retrieves the last known height known by the wallet we need to call the `node_height` method. This is determined as follows:
+
+- If the wallet can successfully contact its configured node, the reported node height is returned, and the updated_from_node field in the response is true
+- If the wallet cannot contact the node, this function returns the maximum height of all outputs contained within the wallet, and the updated_from_node fields in the response is set to false.
+
+Clients should generally ensure the `updated_from_node` field is returned as true before assuming the height for any operation.
+
+The only parameter required is `token` and the structure of the call is like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "node_height",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000"
+    },
+    "id": 1
+}
+```
+
+You can also use the bash script included inside this repository:
+
+```bash
+./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Output:
+
+```json
+{
+  "header_hash": "000071a9ff3bf8bcee8106597efb5d672346d49b5d2c7197873c75a756b9fc78",
+  "height": "1825812",
+  "updated_from_node": true
+}
+```
+
+If you want to parse the output save the values in separated variables you can do that by using `jq`:
+
+```bash
+read header_hash height updated_from_node < <(echo $(./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.header_hash, .height, .updated_from_node'))
+```
+
+To confirm we just need to echo the variables:
+
+```text
+$ echo $header_hash $height $updated_from_node
+0001a006818e60dca117b22ee7df973330e260eb37bd74197e4e84490af138f0 1825828 true
+```
+
 ## Optional
 
 ### Setting the top level directory
