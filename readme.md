@@ -791,15 +791,6 @@ $ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(c
 
 ## Sending a transaction
 
-The Slatepack standard defines two methods methods:
-
-- **Synchronous** communication done through Tor (transaction is completed automatically similar to HTTPS).
-- **Asynchronous** communication using Slatepack Messages, which are encoded slate.
-
-The Slatepack standard automatically handles a failed Tor connection by outputting a Slatepack Message, which is an encoded Slate. Any Slatepack address is decoded by the wallet as a Tor address, where the wallet will be listening. Therefore, if both the exchange's and the user's wallets are online and connected to Tor, payments will complete automatically (the receiver's wallet needs to listen).
-
-However, if a Tor connection between the two wallets can't be established (fails for any reason), or when a Slatepack address is not provided, the wallet will resort to exchanging Slatepack Messages for completing a transaction.
-
 The API method to start a transaction is: `init_send_tx`. This initiate a new transaction as the sender, creating a new Slate object containing the sender's inputs, change outputs, and public signature data. When a transaction is created, the wallet must also lock inputs (and create unconfirmed outputs) corresponding to the transaction created in the slate, so that the wallet doesn't attempt to re-spend outputs that are already included in a transaction before the transaction is confirmed.
 
 The JSON structure of the call looks as follows:
