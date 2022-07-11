@@ -862,13 +862,36 @@ First, we need to get the slate from the Slatepack Message:
 ./scripts/bash/$CHAIN/slate_from_slatepack_message.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
 ```
 
-Now we pass the slate to the `finalize_tx` method.
+Now we need to lock the outputs associated with the inputs to the transaction by using the `tx_lock_outputs` method.
+
+```bash
+./scripts/bash/$CHAIN/tx_lock_outputs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+```
+
+If we now get the wallet summary we should see the amount (including fees) awating to be finalized:
+
+```text
+$ ./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
+{
+  "amount_awaiting_confirmation": "0",
+  "amount_awaiting_finalization": "377000000",
+  "amount_currently_spendable": "0",
+  "amount_immature": "0",
+  "amount_locked": "500000000",
+  "amount_reverted": "0",
+  "last_confirmed_height": "1826310",
+  "minimum_confirmations": "1",
+  "total": "0"
+}
+```
+
+Now we pass the slate to the `finalize_tx` method to finalized the transaction.
 
 ```bash
 ./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
 ```
 
-The returned slate can be now [posted](#posting-a-transaction).
+The returned slate must be [posted](#posting-a-transaction).
 
 ### Posting a transaction
 
