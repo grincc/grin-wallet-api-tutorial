@@ -1,4 +1,4 @@
-# How to communicate with the grin-wallet API, the right way
+# How to communicate securely with the grin-wallet API
 
 In this document I will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
 
