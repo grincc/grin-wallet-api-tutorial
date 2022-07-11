@@ -11,7 +11,7 @@ JSON-RPC requests should be encrypted using these parameters, encoded into base6
 
 Before starting make sure you have installed the next tools: ``` openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5 ```
 
-NOTE: This document assumes that you are **running Linux**.
+NOTE: This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intent to use `Testnet` the value of `$CHAIN` must be `test`, but in case that you are using `Mainnet` the value must be `main`.
 
 ## Installing the latest version of grin wallet and node
 
@@ -151,7 +151,7 @@ Before continuing let's create a service to manage the node.
 Go to the tab where the node is running and press `Q`. Now open the node configuration like this:
 
 ```bash
-nano .grin/main/grin-server.toml
+nano .grin/$CHAIN/grin-server.toml
 ```
 
 Find the `run_tui` parameter and change it to `false`.
@@ -160,7 +160,7 @@ Find the `run_tui` parameter and change it to `false`.
 run_tui = false
 ```
 
-Also if you want to run your node in a separate server from the wallet which is recommended, please change `api_http_addr` to run on your server IP:
+Also if you want to run your node in a separate server from the wallet which is recommended, please change `api_http_addr` to run on your server IP, example:
 
 ```ini
 api_http_addr = "192.168.0.10:3413"
@@ -168,7 +168,7 @@ api_http_addr = "192.168.0.10:3413"
 
 NOTE: Make sure you are using your own IP.
 
-Now creates a file on `/etc/systemd/system/grin.node.service` and paste the next content:
+Now creates a file on `/etc/systemd/system/grin.node.service` and paste the next content inside:
 
 ```ini
 [Unit]
@@ -186,7 +186,7 @@ Group=root
 WantedBy=multi-user.target
 ```
 
-Make sure `ExecStart` contains the correct path.
+NOTE: Make sure `ExecStart` contains the correct path.
 
 One can now enable and start the node service:
 
@@ -202,7 +202,7 @@ systemctl status grin.node.service
 
 You see will now the status:
 
-```test
+```text
 grin.node.service - Grin Node Service
    Loaded: loaded (/etc/systemd/system/grin.node.service; enabled; vendor preset: enabled)
    Active: active (running) since Sun 2022-07-10 12:50:14 CEST; 3h 49min ago
@@ -218,23 +218,23 @@ grin.node.service - Grin Node Service
 We need to obtain a shared key to be able to communicate securely with the API, for this we will use the [private key generated previously](#generating-a-private-key). Run the next command and pass the path of the PEM file of the private key:
 
 ```bash
-python scripts/python/get_wallet_api_shared_secret.py private_key.pem 2> /dev/null > ~/.grin/main/.shared_secret
+python scripts/python/get_wallet_api_shared_secret.py private_key.pem 2> /dev/null > ~/.grin/$CHAIN/.shared_secret
 ```
 
-The secret key will be written on the next path `~/.grin/main/.shared_secret` you can confirm that everything is OK by displaying the content of the file:
+The secret key will be written on the next path `~/.grin/$CHAIN/.shared_secret` you can confirm that everything is OK by displaying the content of the file:
 
 ```bash
-ls -lh ~/.grin/main/.shared_secret
+ls -lh ~/.grin/$CHAIN/.shared_secret
 ```
 
 It should be a 65 bytes file:
 
 ```text
--rw-r--r--  1 david  staff    64B Jul 10 16:02 /Users/david/.grin/main/.shared_secret
+-rw-r--r--  1 david  staff    64B Jul 10 16:02 /Users/david/.grin/$CHAIN/.shared_secret
 ```
 
 ```bash
-cat ~/.grin/main/.shared_secret
+cat ~/.grin/$CHAIN/.shared_secret
 ```
 
 You should see something like the next:
@@ -250,12 +250,12 @@ This is the shared key and will be used then to encrypt and decrypt the paramete
 Now we need to specify the directory where the wallet information will be stored. If you are not using an [encrypted volume](https://guardianproject.info/archive/luks/) at least, try to use an [encrypted filesystem in user-space](https://github.com/vgough/encfs). To do this, we need to call the `set_top_level_directory` endpoint.
 
 ```bash
-./scripts/bash/set_top_level_directory.sh $(cat ~/.grin/main/.shared_secret)
+./scripts/bash/$CHAIN/set_top_level_directory.sh $(cat ~/.grin/$CHAIN/.shared_secret)
 ```
 
 ## Creating a Wallet
 
-Now, we are ready to create a wallet. Remember that the wallet information will be stored in the directory set in the previous step by calling the `set_top_level_directory` method or in `~/.grin/main/wallet_data` by default if `set_top_level_directory` has not been called. In order to create a wallet we will need to call: [`create_wallet`](https://docs.rs/grin_wallet_api/4.0.0/grin_wallet_api/trait.OwnerRpc.html#tymethod.create_wallet), which parameters are the next:
+Now, we are ready to create a wallet. Remember that the wallet information will be stored in the directory set in the previous step by calling the `set_top_level_directory` method or in `~/.grin/$CHAIN/wallet_data` by default if `set_top_level_directory` has not been called. In order to create a wallet we will need to call: [`create_wallet`](https://docs.rs/grin_wallet_api/4.0.0/grin_wallet_api/trait.OwnerRpc.html#tymethod.create_wallet), which parameters are the next:
 
 ```json
 {
@@ -269,7 +269,7 @@ Now, we are ready to create a wallet. Remember that the wallet information will 
 Parameters: `name` and `mnemonic` are optional, `mnemonic_length` specify the length of the seed phrase and `password` is the password of the wallet. This password is also used to encrypt the wallet data on disk.
 
 ```bash
-./scripts/bash/create_wallet.sh $(cat ~/.grin/main/.shared_secret)
+./scripts/bash/$CHAIN/create_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret)
 ```
 
 To confirm that the wallet was created please go to the path previously set and list the file:
@@ -289,5 +289,5 @@ drwxr-xr-x  5 david  staff   160B Jul 10 16:20 wallet_data
 Now that the wallet is created we can open it. This means that we can interact with the wallet.
 
 ```bash
-./scripts/bash/open_wallet.sh $(cat ~/.grin/main/.shared_secret)
+./scripts/bash/$CHAIN/open_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret)
 ```
