@@ -16,7 +16,7 @@
   - [Receiving transaction](#receiving-transaction)
   - [Listing transactions](#listing-transactions)
   - [Canceling transaction](#canceling-transaction)
-  - [Sending transaction](#sending-transaction)
+  - [Sending a transaction](#sending-a-transaction)
     - [Finalizing a transaction](#finalizing-a-transaction)
     - [Posting a transaction](#posting-a-transaction)
   - [Extras](#extras)
@@ -789,7 +789,7 @@ $ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(c
 ]
 ```
 
-## Sending transaction
+## Sending a transaction
 
 The Slatepack standard defines two methods methods:
 
