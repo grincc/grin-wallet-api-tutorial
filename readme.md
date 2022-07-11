@@ -349,7 +349,7 @@ $ cat .wallet_token
 
 We need the token to execute most of the call within the Owner API.
 
-## Retrieving last know Height
+## Retrieving last known Height
 
 To retrieves the last known height known by the wallet we need to call the `node_height` method. This is determined as follows:
 
