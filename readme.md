@@ -13,6 +13,9 @@
   - [Retrieving last known Height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
+  - [Sending coins](#sending-coins)
+  - [Receiving coins](#receiving-coins)
+  - [Listing transactions](#listing-transactions)
   - [Extras](#extras)
     - [Create an account inside a wallet](#create-an-account-inside-a-wallet)
     - [Setting the active account](#setting-the-active-account)
@@ -562,6 +565,16 @@ Output:
 
 ```text
 grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
+```
+
+## Sending coins
+
+## Receiving coins
+
+## Listing transactions
+
+```bash
+./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
 ```
 
 ## Extras
