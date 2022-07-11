@@ -185,13 +185,13 @@ NOTE: Make sure you are using your own IP.
 Create a file here: `/etc/.grinconf` with this content for Mainnet:
 
 ```bash
-$CHAIN_TYPE=""
+CHAIN_TYPE=""
 ```
 
 Or this for Testnet:
 
 ```bash
-$CHAIN_TYPE="--testnet"
+CHAIN_TYPE="--testnet"
 ```
 
 This will tell the node which is the desired chain. Now create a file on `/etc/systemd/system/grin.node.service` and paste the next content inside:
