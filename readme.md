@@ -4,8 +4,8 @@
   - [Introduction](#introduction)
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
-  - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
   - [Running Grin Node as a Service](#running-grin-node-as-a-service)
+  - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
   - [Generating a private key](#generating-a-private-key)
   - [Obtaining the shared key](#obtaining-the-shared-key)
   - [Creating a wallet](#creating-a-wallet)
@@ -110,28 +110,6 @@ The Owner API is intended to expose methods that are to be used by the wallet ow
 
 Use the third tabs to go through the next steps.
 
-## Preparing a Python virtual enviroment
-
-A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment run the next command:
-
-```bash
-python3 -m virtualenv .venv
-```
-
-After that, proceed to activate the recently created environment:
-
-```bash
-source .venv/bin/activate
-```
-
-After activating the virtual environment we need to be install all dependencies. In order to do so, execute the next command:
-
-```bash
-pip install -r requirements.txt
-```
-
-NOTE: All the steps below must be followed inside the virtual environment.
-
 ## Running Grin Node as a Service
 
 Before continuing let's create a service to manage the node.
@@ -213,6 +191,28 @@ grin.node.service - Grin Node Service
    CGroup: /system.slice/grin.node.service
            └─26784 /usr/local/bin/grin
 ```
+
+## Preparing a Python virtual enviroment
+
+A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment run the next command:
+
+```bash
+python3 -m virtualenv .venv
+```
+
+After that, proceed to activate the recently created environment:
+
+```bash
+source .venv/bin/activate
+```
+
+After activating the virtual environment we need to be install all dependencies. In order to do so, execute the next command:
+
+```bash
+pip install -r requirements.txt
+```
+
+NOTE: All the steps below must be followed inside the virtual environment.
 
 ## Generating a private key
 
