@@ -4,9 +4,9 @@
   - [Introduction](#introduction)
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
-  - [Generating a private key](#generating-a-private-key)
   - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
   - [Running Grin Node as a Service](#running-grin-node-as-a-service)
+  - [Generating a private key](#generating-a-private-key)
   - [Obtaining the Shared Key](#obtaining-the-shared-key)
   - [Creating a Wallet](#creating-a-wallet)
   - [Opening a Wallet](#opening-a-wallet)
@@ -110,73 +110,6 @@ The Owner API is intended to expose methods that are to be used by the wallet ow
 
 Use the third tabs to go through the next steps.
 
-## Generating a private key
-
-In order to obtain the `shared key` we frist need to have a private key. Run the next command to generate and encrypt your private key using a strong pass phrase:
-
-```bash
-openssl ecparam -genkey -name secp256k1 -param_enc explicit | openssl ec -aes256 -out private_key.pem
-```
-
-You have to get an output like the next:
-
-```text
-read EC key
-writing EC key
-Enter PEM pass phrase:
-Verifying - Enter PEM pass phrase:
-```
-
-Make sure to keep safe the key file `private_key.pem` and the pass phrase used.
-
-To confirm that the key was succesfully created, execute the next command:
-
-```bash
-$ ls -lh private_key.pem
--rw-r--r--  1 david  staff   529B Jul 10 15:53 private_key.pem
-```
-
-Also you can read the private key like this:
-
-```bash
-openssl pkey -in private_key.pem -inform pem -noout -text
-```
-
-You will see something like this:
-
-```text
-Enter pass phrase for private_key.pem:
-Private-Key: (256 bit)
-priv:
-    08:f5:49:3d:3e:08:7f:57:65:dd:05:93:e0:b0:56:
-    9d:4e:da:ff:b8:40:7e:70:ee:85:33:b9:08:fe:b6:
-    b5:ae
-pub:
-    04:f6:55:f6:5d:01:2d:2e:ca:4a:35:1c:6f:89:ae:
-    73:88:9d:28:a4:88:65:bf:6e:58:6d:1a:3c:1f:37:
-    8f:68:09:8d:37:1b:96:a5:61:17:b0:6f:11:b9:fa:
-    02:f8:65:16:77:30:7a:18:09:f8:28:1f:22:b8:0c:
-    52:e6:de:07:e6
-Field Type: prime-field
-Prime:
-    00:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:
-    ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:fe:ff:
-    ff:fc:2f
-A:    0
-B:    7 (0x7)
-Generator (uncompressed):
-    04:79:be:66:7e:f9:dc:bb:ac:55:a0:62:95:ce:87:
-    0b:07:02:9b:fc:db:2d:ce:28:d9:59:f2:81:5b:16:
-    f8:17:98:48:3a:da:77:26:a3:c4:65:5d:a4:fb:fc:
-    0e:11:08:a8:fd:17:b4:48:a6:85:54:19:9c:47:d0:
-    8f:fb:10:d4:b8
-Order:
-    00:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:
-    ff:fe:ba:ae:dc:e6:af:48:a0:3b:bf:d2:5e:8c:d0:
-    36:41:41
-Cofactor:  1 (0x1)
-```
-
 ## Preparing a Python virtual enviroment
 
 A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment run the next command:
@@ -279,6 +212,73 @@ grin.node.service - Grin Node Service
    Memory: 600.8M
    CGroup: /system.slice/grin.node.service
            └─26784 /usr/local/bin/grin
+```
+
+## Generating a private key
+
+In order to obtain the `shared key` we frist need to have a private key. Run the next command to generate and encrypt your private key using a strong pass phrase:
+
+```bash
+openssl ecparam -genkey -name secp256k1 -param_enc explicit | openssl ec -aes256 -out private_key.pem
+```
+
+You have to get an output like the next:
+
+```text
+read EC key
+writing EC key
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+```
+
+Make sure to keep safe the key file `private_key.pem` and the pass phrase used.
+
+To confirm that the key was succesfully created, execute the next command:
+
+```bash
+$ ls -lh private_key.pem
+-rw-r--r--  1 david  staff   529B Jul 10 15:53 private_key.pem
+```
+
+Also you can read the private key like this:
+
+```bash
+openssl pkey -in private_key.pem -inform pem -noout -text
+```
+
+You will see something like this:
+
+```text
+Enter pass phrase for private_key.pem:
+Private-Key: (256 bit)
+priv:
+    08:f5:49:3d:3e:08:7f:57:65:dd:05:93:e0:b0:56:
+    9d:4e:da:ff:b8:40:7e:70:ee:85:33:b9:08:fe:b6:
+    b5:ae
+pub:
+    04:f6:55:f6:5d:01:2d:2e:ca:4a:35:1c:6f:89:ae:
+    73:88:9d:28:a4:88:65:bf:6e:58:6d:1a:3c:1f:37:
+    8f:68:09:8d:37:1b:96:a5:61:17:b0:6f:11:b9:fa:
+    02:f8:65:16:77:30:7a:18:09:f8:28:1f:22:b8:0c:
+    52:e6:de:07:e6
+Field Type: prime-field
+Prime:
+    00:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:
+    ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:fe:ff:
+    ff:fc:2f
+A:    0
+B:    7 (0x7)
+Generator (uncompressed):
+    04:79:be:66:7e:f9:dc:bb:ac:55:a0:62:95:ce:87:
+    0b:07:02:9b:fc:db:2d:ce:28:d9:59:f2:81:5b:16:
+    f8:17:98:48:3a:da:77:26:a3:c4:65:5d:a4:fb:fc:
+    0e:11:08:a8:fd:17:b4:48:a6:85:54:19:9c:47:d0:
+    8f:fb:10:d4:b8
+Order:
+    00:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:
+    ff:fe:ba:ae:dc:e6:af:48:a0:3b:bf:d2:5e:8c:d0:
+    36:41:41
+Cofactor:  1 (0x1)
 ```
 
 ## Obtaining the Shared Key
