@@ -15,7 +15,7 @@ api_user = "grin"
 owner_api_secret = Path(
     os.path.join(str(Path.home()), ".grin/test/.owner_api_secret")
 ).read_text()
-wallet_api_address = "127.0.0.1:13420"
+wallet_api_address = "127.0.0.1:3420"
 api_url = f"http://{wallet_api_address}/v3/owner"
 
 # Private Key Hex String
