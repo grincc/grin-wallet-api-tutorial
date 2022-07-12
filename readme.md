@@ -154,7 +154,9 @@ Also if you want to run your node in a separate server from the wallet which is 
 api_http_addr = "0.0.0.0:3413"
 ```
 
-Create a file here: `/etc/.grinconf` with this content for Mainnet:
+NOTE: Be aware that you probably will need to properly configure your firewall
+
+Next, create a file here: `/etc/.grinconf` with this content for Mainnet:
 
 ```bash
 CHAIN_TYPE=""
