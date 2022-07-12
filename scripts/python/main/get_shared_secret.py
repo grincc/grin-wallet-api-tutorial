@@ -12,9 +12,9 @@ from ecdsa import ECDH, SECP256k1, SigningKey, VerifyingKey
 
 # default username is 'grin'
 api_user = "grin"
-# password for owner api, location ~/.grin/test/.owner_api_secret (for testnet)
+# password for owner api, location ~/.grin/main/.owner_api_secret (for mainnet)
 owner_api_secret = Path(
-    os.path.join(str(Path.home()), ".grin/test/.owner_api_secret")
+    os.path.join(str(Path.home()), ".grin/main/.owner_api_secret")
 ).read_text()
 wallet_api_address = "127.0.0.1:3420"
 api_url = f"http://{wallet_api_address}/v3/owner"
