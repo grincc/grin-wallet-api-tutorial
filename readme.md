@@ -7,9 +7,9 @@
   - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
   - [Running Grin Node as a Service](#running-grin-node-as-a-service)
   - [Generating a private key](#generating-a-private-key)
-  - [Obtaining the Shared Key](#obtaining-the-shared-key)
-  - [Creating a Wallet](#creating-a-wallet)
-  - [Opening a Wallet](#opening-a-wallet)
+  - [Obtaining the shared key](#obtaining-the-shared-key)
+  - [Creating a wallet](#creating-a-wallet)
+  - [Opening a wallet](#opening-a-wallet)
   - [Retrieving last known Height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
@@ -25,7 +25,7 @@
     - [Listing wallet accounts](#listing-wallet-accounts)
     - [Setting the top level directory](#setting-the-top-level-directory)
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
-    - [Getting stored Transactions](#getting-stored-transactions)
+    - [Getting stored transactions](#getting-stored-transactions)
 
 ## Introduction
 
@@ -281,7 +281,7 @@ Order:
 Cofactor:  1 (0x1)
 ```
 
-## Obtaining the Shared Key
+## Obtaining the shared key
 
 We need to obtain a shared key to be able to communicate securely with the API, for this we will use the [private key generated previously](#generating-a-private-key). Run the next command and pass the path of the PEM file of the private key:
 
@@ -313,7 +313,7 @@ You should see something like the next:
 
 This is the shared key and will be used then to encrypt and decrypt the parameters and the responses with the API. This `shared_secret`key will be use to encrypt and decrypt the API calls and response. This must be done everytime you start the owner API.
 
-## Creating a Wallet
+## Creating a wallet
 
 Now, we are ready to create a wallet. Remember that the wallet information will be stored in the directory set in the previous step by calling the `set_top_level_directory` method or in `~/.grin/$CHAIN/wallet_data` by default if `set_top_level_directory` has not been called. In order to create a wallet we will need to call: [`create_wallet`](https://docs.rs/grin_wallet_api/4.0.0/grin_wallet_api/trait.OwnerRpc.html#tymethod.create_wallet), which parameters are the next:
 
@@ -344,7 +344,7 @@ You should see something like this:
 drwxr-xr-x  5 david  staff   160B Jul 10 16:20 wallet_data
 ```
 
-## Opening a Wallet
+## Opening a wallet
 
 Now that the wallet is created we can open it. This means that we can interact with the wallet. In order to do so we need a `token`, this token will be used as a parameter for those calls that are related to the wallet. To get this token we need to call the `open_wallet` method with the next parameters:
 
@@ -1003,7 +1003,7 @@ To get the seed phrase call the method `get_mnemonic` like this:
 ./scripts/bash/$CHAIN/get_mnemonic.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
 ```
 
-### Getting stored Transactions
+### Getting stored transactions
 
 In order to get a stored transaction we could use the transaction slate id as a parameter for the `get_stored_tx` method like this:
 
