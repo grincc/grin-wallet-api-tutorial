@@ -148,13 +148,11 @@ Find the `run_tui` parameter and change it to `false`.
 run_tui = false
 ```
 
-Also if you want to run your node in a separate server from the wallet which is recommended, please change `api_http_addr` to run on your server IP, example:
+Also if you want to run your node in a separate server from the wallet which is recommended, please change `api_http_addr` to run on: `0.0.0.0`, example:
 
 ```ini
-api_http_addr = "192.168.0.10:3413"
+api_http_addr = "0.0.0.0:3413"
 ```
-
-NOTE: Make sure you are using your own IP.
 
 Create a file here: `/etc/.grinconf` with this content for Mainnet:
 
