@@ -10,7 +10,7 @@
   - [Obtaining the shared key](#obtaining-the-shared-key)
   - [Creating a wallet](#creating-a-wallet)
   - [Opening a wallet](#opening-a-wallet)
-  - [Retrieving last known Height](#retrieving-last-known-height)
+  - [Retrieving last known height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
   - [Receiving a transaction](#receiving-a-transaction)
@@ -378,7 +378,7 @@ $ cat .wallet_token
 
 We need the token to execute most of the call within the Owner API.
 
-## Retrieving last known Height
+## Retrieving last known height
 
 To retrieves the last known height known by the wallet we need to call the `node_height` method. This is determined as follows:
 
