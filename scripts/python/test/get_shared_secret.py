@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+import re
 import os
 import subprocess
 import sys
@@ -22,14 +23,11 @@ api_url = f"http://{wallet_api_address}/v3/owner"
 private_key_pem_file = "private_key.pem"
 if len(sys.argv) > 0:
     private_key_pem_file = sys.argv[1]
-private_key_hex = (
-    subprocess.check_output(
-        f"openssl ec -in {private_key_pem_file} -outform DER 2> /dev/null | xxd -p -c0",
-        shell=True,
-    )
-    .decode("utf-8")
-    .rstrip()
-)
+private_key_hex = subprocess.check_output(
+    f"openssl ec -in {private_key_pem_file} -outform DER 2> /dev/null | xxd -p -c0",
+    shell=True,
+).decode("utf-8")
+private_key_hex = re.sub("\n|\r", "", private_key_hex)
 
 # Create Private Key object from Private Key Hex String
 sk = SigningKey.from_der(bytearray.fromhex(private_key_hex), hashfunc=hashlib.sha256)

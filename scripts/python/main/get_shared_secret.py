@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+import re
 import os
 import subprocess
 import sys
@@ -11,9 +12,9 @@ from ecdsa import ECDH, SECP256k1, SigningKey, VerifyingKey
 
 # default username is 'grin'
 api_user = "grin"
-# password for owner api, location ~/.grin/main/.owner_api_secret (for mainnet)
+# password for owner api, location ~/.grin/test/.owner_api_secret (for testnet)
 owner_api_secret = Path(
-    os.path.join(str(Path.home()), ".grin/main/.owner_api_secret")
+    os.path.join(str(Path.home()), ".grin/test/.owner_api_secret")
 ).read_text()
 wallet_api_address = "127.0.0.1:3420"
 api_url = f"http://{wallet_api_address}/v3/owner"
@@ -22,14 +23,11 @@ api_url = f"http://{wallet_api_address}/v3/owner"
 private_key_pem_file = "private_key.pem"
 if len(sys.argv) > 0:
     private_key_pem_file = sys.argv[1]
-private_key_hex = (
-    subprocess.check_output(
-        f"openssl ec -in {private_key_pem_file} -outform DER 2> /dev/null | xxd -p -c0",
-        shell=True,
-    )
-    .decode("utf-8")
-    .rstrip()
-)
+private_key_hex = subprocess.check_output(
+    f"openssl ec -in {private_key_pem_file} -outform DER 2> /dev/null | xxd -p -c0",
+    shell=True,
+).decode("utf-8")
+private_key_hex = re.sub("\n|\r", "", private_key_hex)
 
 # Create Private Key object from Private Key Hex String
 sk = SigningKey.from_der(bytearray.fromhex(private_key_hex), hashfunc=hashlib.sha256)
