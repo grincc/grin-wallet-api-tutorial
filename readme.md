@@ -5,7 +5,7 @@
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
   - [Running Grin Node as a Service](#running-grin-node-as-a-service)
-  - [Preparing a Python virtual enviroment](#preparing-a-python-virtual-enviroment)
+  - [Preparing a Python virtual environment](#preparing-a-python-virtual-enviroment)
   - [Generating a private key](#generating-a-private-key)
   - [Obtaining the shared key](#obtaining-the-shared-key)
   - [Creating a wallet](#creating-a-wallet)
@@ -29,7 +29,7 @@
 
 ## Introduction
 
-This document will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will be then encrypted and decrypted with the following parameters:
+This document will define the basis of proper communication with the grin-wallet API, which is the use of secure JSON-RPC calls. A shared key must first be calculated before calling any other JSON-RPC method. All subsequent requests and responses will then be encrypted and decrypted with the following parameters:
 
 - AES-256 in GCM mode with 128-bit tags and 96 bit nonces
 - 12 byte nonce which must be included in each request/response to use on the decrypting side
@@ -40,7 +40,7 @@ JSON-RPC requests should be encrypted using these parameters, encoded into base6
 
 Before starting make sure you have installed the next tools: ``` openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5 ```
 
-This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intent to use `Testnet` the value of `$CHAIN` must be `test`, but in case that you are using `Mainnet` the value must be `main`:
+This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intend to use `Testnet` the value of `$CHAIN` must be `test`, but if you are using `Mainnet`, the value must be `main`:
 
 For Mainnet:
 
@@ -56,7 +56,7 @@ export CHAIN="test"
 
 ## Installing the latest version of grin wallet and node
 
-Go to grin.mw/download and download the tgz files of grin and grin-wallet by clicking on their name titles. Or alternatively, type in the terminal:
+Go to grin.mw/download and download the tgz files of grin and grin-wallet by clicking on their name titles, or alternatively, type in the terminal:
 
 ```bash
 wget https://github.com/mimblewimble/grin/releases/download/v5.1.2/grin-v5.1.2-linux-amd64.tar.gz
@@ -94,7 +94,7 @@ For Testnet:
 grin --testnet
 ```
 
-In the second tab, you need need to start the wallet api, for Mainnet:
+In the second tab, you need to start the wallet api, for Mainnet:
 
 ```bash
 grin-wallet owner_api --run_foreign
@@ -106,7 +106,7 @@ For Testnet:
 grin-wallet --testnet owner_api --run_foreign
 ```
 
-The Owner API is intended to expose methods that are to be used by the wallet owner only and the Foreign API contains methods that other wallets will use to interact with the owner's wallet.
+The Owner API is intended to expose methods that are to be used by the wallet owner only; the Foreign API contains methods that other wallets will use to interact with the owner's wallet.
 
 Use the third tabs to go through the next steps.
 
@@ -126,7 +126,7 @@ Find the `run_tui` parameter and change it to `false`.
 run_tui = false
 ```
 
-Also if you want to run your node in a separate server from the wallet which is recommended, please change `api_http_addr` to run on: `0.0.0.0`, example:
+If you want to run your node in a separate server from the wallet (which is recommended), please change `api_http_addr` to run on: `0.0.0.0`, example:
 
 ```ini
 api_http_addr = "0.0.0.0:3413"
@@ -192,9 +192,9 @@ grin.node.service - Grin Node Service
            └─26784 /usr/local/bin/grin
 ```
 
-## Preparing a Python virtual enviroment
+## Preparing a Python virtual environment
 
-A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment run the next command:
+A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment, run the next command:
 
 ```bash
 python3 -m virtualenv .venv
@@ -206,7 +206,7 @@ After that, proceed to activate the recently created environment:
 source .venv/bin/activate
 ```
 
-After activating the virtual environment we need to be install all dependencies. In order to do so, execute the next command:
+After activating the virtual environment, we need to install all dependencies. In order to do so, execute the next command:
 
 ```bash
 pip install -r requirements.txt
@@ -216,7 +216,7 @@ NOTE: All the steps below must be followed inside the virtual environment.
 
 ## Generating a private key
 
-In order to obtain the `shared key` we frist need to have a private key. Run the next command to generate and encrypt your private key using a strong pass phrase:
+In order to obtain the `shared key` we first need to have a private key. Run the next command to generate and encrypt your private key using a strong pass phrase:
 
 ```bash
 openssl ecparam -genkey -name secp256k1 -param_enc explicit | openssl ec -aes256 -out private_key.pem
@@ -231,16 +231,16 @@ Enter PEM pass phrase:
 Verifying - Enter PEM pass phrase:
 ```
 
-Make sure to keep safe the key file `private_key.pem` and the pass phrase used.
+Make sure to keep the key file `private_key.pem` and the pass phrase used safe.
 
-To confirm that the key was succesfully created, execute the next command:
+To confirm that the key was successfully created, execute the next command:
 
 ```bash
 $ ls -lh private_key.pem
 -rw-r--r--  1 david  staff   529B Jul 10 15:53 private_key.pem
 ```
 
-Also you can read the private key like this:
+You can also read the private key like this:
 
 ```bash
 openssl pkey -in private_key.pem -inform pem -noout -text
@@ -283,7 +283,7 @@ Cofactor:  1 (0x1)
 
 ## Obtaining the shared key
 
-We need to obtain a shared key to be able to communicate securely with the API, for this we will use the [private key generated previously](#generating-a-private-key). Run the next command and pass the path of the PEM file of the private key:
+We need to obtain a shared key to be able to communicate securely with the API; for this we will use the [private key generated previously](#generating-a-private-key). Run the next command and pass the path of the PEM file of the private key:
 
 ```bash
 python scripts/python/$CHAIN/get_shared_secret.py private_key.pem 2> /dev/null > ~/.grin/$CHAIN/.shared_secret
@@ -305,13 +305,13 @@ It should be a 64 bytes file:
 cat ~/.grin/$CHAIN/.shared_secret
 ```
 
-You should see something like the next:
+You should see something like this next:
 
 ```bash
 3a82acc078e6db6bf08dc1b17c65f001e64a237f1a1e162d91b467221d907575
 ```
 
-This is the shared key and will be used then to encrypt and decrypt the parameters and the responses with the API. This `shared_secret`key will be use to encrypt and decrypt the API calls and response. This must be done everytime you start the owner API.
+This is the shared key and will be used then to encrypt and decrypt the parameters and the responses with the API. This `shared_secret`key will be use to encrypt and decrypt the API calls and response. This must be done every time you start the owner API.
 
 ## Creating a wallet
 
@@ -332,7 +332,7 @@ Parameters: `name` and `mnemonic` are optional, `mnemonic_length` specify the le
 ./scripts/bash/$CHAIN/create_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret)
 ```
 
-To confirm that the wallet was created please go to the path previously set and list the file:
+To confirm that the wallet was created, please go to the path previously set and list the file:
 
 ```bash
 ls -lh
@@ -346,7 +346,7 @@ drwxr-xr-x  5 david  staff   160B Jul 10 16:20 wallet_data
 
 ## Opening a wallet
 
-Now that the wallet is created we can open it. This means that we can interact with the wallet. In order to do so we need a `token`, this token will be used as a parameter for those calls that are related to the wallet. To get this token we need to call the `open_wallet` method with the next parameters:
+Now that the wallet is created, we can open it. This means that we can interact with the wallet. In order to do so we need a `token`, this token will be used as a parameter for those calls that are related to the wallet. To get this token we need to call the `open_wallet` method with the next parameters:
 
 ```json
 {
@@ -360,7 +360,7 @@ Now that the wallet is created we can open it. This means that we can interact w
 }
 ```
 
-The parameter `name`is the name of the wallet, this parameter can be `null` for now, and `password` is the password of the wallet.
+The parameter `name` is the name of the wallet, this parameter can be `null` for now, and `password` is the password of the wallet.
 
 ```bash
 ./scripts/bash/$CHAIN/open_wallet.sh $(cat ~/.grin/$CHAIN/.shared_secret) .wallet_token
@@ -416,7 +416,7 @@ Output:
 }
 ```
 
-If you want to parse the output save the values in separated variables you can do that by using `jq`:
+If you want to parse the output to save the values in separated variables, you can do that by using `jq`:
 
 ```bash
 read header_hash height updated_from_node < <(echo $(./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.header_hash, .height, .updated_from_node'))
@@ -477,8 +477,8 @@ Example output:
 ]
 ```
 
-- The first element is a boolean element and indicates whether the data was successfully refreshed from the node (note this may be false even if the `refresh_from_node` argument was set to true.
-- The second element contains the Summary Wallet Information.
+-The first element is a boolean element and indicates whether the data was successfully refreshed from the node (note: this may be false even if the `refresh_from_node` argument was set to true.)
+-The second element contains the Summary Wallet Information.
 
 Again, you can use `jq` to parse the output; if you want to know whether or not the data was successfully refreshed from the node you can do it like this:
 
@@ -493,7 +493,7 @@ $ echo $refreshed
 true
 ```
 
-To get the spenable balance you can do it also using `jq`:
+To get the spendable balance you can do it also using `jq`:
 
 ```bash
 spendable=$(./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.[1].amount_currently_spendable')
@@ -513,7 +513,7 @@ A Slatepack address is a bech32 encoded address, similar to those used in Bitcoi
 - It decodes to a Tor address.
 - Acts as a key to encrypt the transaction data being communicated by Slatepack Messages (strings).
 
-To retrieve the public slatepack address associated with the active account at the given derivation path, you just need to call the method `get_slatepack_address` like this:
+To retrieve the public Slatepack address associated with the active account at the given derivation path, you just need to call the method `get_slatepack_address` like this:
 
 ```json
 {
@@ -527,7 +527,7 @@ To retrieve the public slatepack address associated with the active account at t
 }
 ```
 
-In this case, an "address" means a Slatepack Address corresponding to a private key derived as follows:
+In this case, an "address" means a Slatepack address corresponding to a private key derived as follows:
 
 e.g. The default parent account is at `m/0/0`
 
@@ -545,7 +545,7 @@ With addresses created as:
 m/0/1/0 m/0/1/1 etc...
 ```
 
-Note that these addresses correspond to the public keys used in the addresses of TOR hidden services configured by the wallet listener.
+Note: these addresses correspond to the public keys used in the addresses of TOR hidden services configured by the wallet listener.
 
 Example using `derivation_index = 0`:
 
@@ -573,7 +573,7 @@ grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
 
 ## Receiving a transaction
 
-A Slate contains its own separate representation of Grin's internal Transaction object, this object is encoded within the Slatepack Message therefore the first step is to decode the slatepack. To get the Slate from the Slatepack Message, we need to call `slate_from_slatepack_message` like this:
+A Slate contains its own separate representation of Grin's internal Transaction object, this object is encoded within the Slatepack Message; therefore, the first step is to decode the Slatepack. To get the Slate from the Slatepack Message, we need to call `slate_from_slatepack_message` like this:
 
 ```json
 {
@@ -588,8 +588,8 @@ A Slate contains its own separate representation of Grin's internal Transaction 
 }
 ```
 
-`message` - A string representing an armored slatepack.
-`secret_indices` - Indices along this wallet's deriviation path with which to attempt decryption. This function will attempt to use secret keys at each index along this path to attempt to decrypt the payload, returning an error if none of the keys match.
+`message` - A string representing an armored Slatepack.
+`secret_indices` - Indices along this wallet's derivation path with which to attempt decryption. This function will attempt to use secret keys at each index along this path to attempt to decrypt the payload, returning an error if none of the keys match.
 
 To see an example run the next:
 
@@ -623,9 +623,9 @@ $ cat slate.json
 }
 ```
 
-Next, we need to call the method: `receive_tx` from the Foreign API which recieve a tranaction created by another party, returning the modified Slate object, modified with the recipient's output for the transaction amount, and public signature data. This slate can then be sent back to the sender to finalize the transaction via the Owner API's finalize_tx method.
+Next, we need to call the method: `receive_tx` from the Foreign API which receives a transaction created by another party, returning the modified Slate object, modified with the recipient's output for the transaction amount, and public signature data. This slate can then be sent back to the sender to finalize the transaction via the Owner API's finalize_tx method.
 
-This function creates a single output for the full amount, set to a status of 'Awaiting finalization'. It will remain in this state until the wallet finds the corresponding output on the chain, at which point it will become 'Unspent'. The slate will be updated with the results of Signing round 1 and 2, adding the recipient's public nonce, public excess value, and partial signature to the slate.
+This function creates a single output for the full amount and sets to a status of 'Awaiting finalization'. It will remain in this state until the wallet finds the corresponding output on the chain, at which point it will become 'Unspent'. The slate will be updated with the results of signing round 1 and 2, adding the recipient's public nonce, public excess value, and partial signature to the slate.
 
 Also creates a corresponding Transaction Log Entry in the wallet's transaction log.
 
@@ -633,9 +633,9 @@ The positional parameters for this method are the next:
 
 - `slate` - The transaction Slate. The slate should contain the results of the sender's round 1 (e.g, public nonce and public excess value).
 - `dest_acct_name` - The name of the account into which the slate should be received. If None, the default account is used.
-- `r_addr` - If included, attempt to send the slate back to the sender using the slatepack sync send (TOR). If providing this argument, check the state field of the slate to see if the sync_send was successful (it should be S3 if the synced send sent successfully).
+- `r_addr` - If included, attempts to send the slate back to the sender using the Slatepack sync send (TOR). If providing this argument, check the state field of the slate to see if the sync_send was successful (it should be S3 if the synced send sent successfully).
 
-You can use one of the bash script inside this repository like this:
+You can use one of the bash scripts inside this repository like this:
 
 ```bash
 ./scripts/bash/$CHAIN/receive_tx.sh default slate.json
@@ -643,7 +643,7 @@ You can use one of the bash script inside this repository like this:
 
 Where `default` is the account and `slate.json` is the file where we store the slate. This will return a Slate which should be transformed into a Slatepack Message.
 
-To crete the Slatepack Message from the slate we need to call `create_slatepack_message` and pass the slate like this:
+To create the Slatepack Message from the slate, we need to call `create_slatepack_message` and pass the slate like this:
 
 ```json
 {
@@ -674,7 +674,7 @@ To crete the Slatepack Message from the slate we need to call `create_slatepack_
 
 - `token` - Token of the opened wallet.
 - `sender_index` - If Some(n), the index along the derivation path to include as the sender
-- `recipients` - Optional recipients for which to encrypt the slatepack's payload (i.e. the slate). If it is empty, the payload will remain unencrypted
+- `recipients` - Optional recipients for which to encrypt the Slatepack's payload (i.e. the slate). If it is empty, the payload will remain unencrypted
 
 Example:
 
@@ -741,7 +741,7 @@ Output:
 
 ## Canceling a transaction
 
-In order to cancel a transaction we could use the transaction slate id as a parameter for the `cancel_tx` method like this:
+In order to cancel a transaction, we could use the transaction slate id as a parameter for the `cancel_tx` method like this:
 
 ```json
 {
@@ -762,7 +762,7 @@ Example:
 ./scripts/bash/$CHAIN/cancel_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "d3a57cb7-b40d-4c71-8e19-b3bc79d50be0"
 ```
 
-Now if we check the status it should say `TxReceivedCancelled`:
+Now if we check the status, it should say `TxReceivedCancelled`:
 
 ```text
 $ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
@@ -792,7 +792,7 @@ $ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(c
 
 ## Sending a transaction
 
-The API method to start a transaction is: `init_send_tx`. This initiate a new transaction as the sender, creating a new Slate object containing the sender's inputs, change outputs, and public signature data. When a transaction is created, the wallet must also lock inputs (and create unconfirmed outputs) corresponding to the transaction created in the slate, so that the wallet doesn't attempt to re-spend outputs that are already included in a transaction before the transaction is confirmed.
+The API method to start a transaction is: `init_send_tx`. This initiates a new transaction as the sender, creating a new Slate object containing the sender's inputs, change outputs, and public signature data. When a transaction is created, the wallet must also lock inputs (and create unconfirmed outputs) corresponding to the transaction created in the slate. This is so the wallet doesn't attempt to re-spend outputs that are already included in a transaction before the transaction is confirmed.
 
 The JSON structure of the call looks as follows:
 
@@ -822,7 +822,7 @@ The JSON structure of the call looks as follows:
 - `token`- Token of the opened wallet.
 - `args` - Transaction initialization arguments.
 
-This method returns the transaction Slate, which can be forwarded to the recieving party by any means after encoding the information into a Slatepack Message.
+This method returns the transaction Slate, which can be forwarded to the receiving party by any means after encoding the information into a Slatepack Message.
 
 Example of sending 0.1 grins:
 
@@ -830,7 +830,7 @@ Example of sending 0.1 grins:
 ./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
-The slate should be encoded now `create_slatepack_message` which creates a slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
+The slate should be encoded now `create_slatepack_message` which creates a Slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
 
 Example:
 
@@ -842,9 +842,9 @@ This returned Slatepack Message can be shared now with the receiver. The transac
 
 ### Finalizing a transaction
 
-After all parties have filled in both rounds of Slate generation a transaction Finalized. This step adds all participants partial signatures to create the final signature, resulting in a final transaction that is ready to post to a node.
+After all parties have filled in both rounds of Slate generation, a transaction is “Finalized”. This step adds all participants’ partial signatures to create the final signature, resulting in a final transaction that is ready to post to a node.
 
-Note that this function **DOES NOT POST the transaction** to a node for validation. This is done in separately via the `post_tx` function.
+Note: This function **DOES NOT POST THE TRANSACTION** to a node for validation. This is done separately via the `post_tx` function.
 
 To finalize the transaction `finalize_tx` must be called, this method receives a `slate` and a `token`.
 
@@ -860,7 +860,7 @@ Now we need to lock the outputs associated with the inputs to the transaction by
 ./scripts/bash/$CHAIN/tx_lock_outputs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
 ```
 
-If we now get the wallet summary we should see the amount (including fees) awating to be finalized:
+If we now get the wallet summary, we should see the amount (including fees) awaiting to be finalized:
 
 ```text
 $ ./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq '.[1]'
@@ -877,17 +877,17 @@ $ ./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_se
 }
 ```
 
-Now we pass the slate to the `finalize_tx` method to finalized the transaction.
+Now we pass the slate to the `finalize_tx` method to finalize the transaction.
 
 ```bash
 ./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json > finalized.slate.json
 ```
 
-The returned slate must be [posted](#posting-a-transaction).
+The returned slate must now be [posted](#posting-a-transaction).
 
 ### Posting a transaction
 
-Transactions need to be broadcasted. For this we need to call the `post_tx` method, this method post a completed transaction to the listening node for validation and inclusion in a block for mining. This method receives a `slate` and a `token`.
+Transactions need to be broadcasted. For this we need to call the `post_tx` method, this method posts a completed transaction to the listening node for validation and inclusion in a block for mining. This method receives a `slate` and a `token`.
 
 ```bash
 ./scripts/bash/$CHAIN/post_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) finalized.slate.json
@@ -913,7 +913,7 @@ This can be done using the method `create_account_path` and the json structure i
 }
 ```
 
-Where `token` is the token of the opened wallet and `label` is  human readable label to which to map the new BIP32 Path.
+Where `token` is the token of the opened wallet and `label` is a human readable label to which to map the new BIP32 Path.
 
 ```bash
 ./scripts/bash/$CHAIN/create_account_path.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
@@ -935,7 +935,7 @@ You just need to call the method: `create_account_path` with the json structure 
 }
 ```
 
-Where `token` is the token of the opened wallet and `label` is  human readable label of the BIP32 Path. The default label is `default`.
+Where `token` is the token of the opened wallet and `label` is a human readable label of the BIP32 Path. The default label is `default`.
 
 ```bash
 ./scripts/bash/$CHAIN/set_active_account.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
@@ -1005,7 +1005,7 @@ To get the seed phrase call the method `get_mnemonic` like this:
 
 ### Getting stored transactions
 
-In order to get a stored transaction we could use the transaction slate id as a parameter for the `get_stored_tx` method like this:
+In order to get a stored transaction, we could use the transaction slate id as a parameter for the `get_stored_tx` method like this:
 
 ```json
 {
