@@ -5,7 +5,7 @@
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
   - [Running Grin Node as a Service](#running-grin-node-as-a-service)
-  - [Preparing a Python virtual environment](#preparing-a-python-virtual-enviroment)
+  - [Preparing a Python virtual environment](#preparing-a-python-virtual-environment)
   - [Generating a private key](#generating-a-private-key)
   - [Obtaining the shared key](#obtaining-the-shared-key)
   - [Creating a wallet](#creating-a-wallet)
