@@ -8,18 +8,19 @@
   - [Preparing a Python virtual environment](#preparing-a-python-virtual-environment)
   - [Generating a private key](#generating-a-private-key)
   - [Obtaining the shared key](#obtaining-the-shared-key)
-  - [Creating a wallet](#creating-a-wallet)
-  - [Opening a wallet](#opening-a-wallet)
-  - [Retrieving last known height](#retrieving-last-known-height)
-  - [Getting wallet balance](#getting-wallet-balance)
-  - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
-  - [Grin's Transactions](#grins-transactions)
+  - [Wallets in Grin](#wallets-in-grin)
+    - [Creating a wallet](#creating-a-wallet)
+    - [Opening a wallet](#opening-a-wallet)
+    - [Obtaining wallet balance](#obtaining-wallet-balance)
+    - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
+  - [Working with transactions](#working-with-transactions)
     - [Receiving a transaction](#receiving-a-transaction)
     - [Listing transactions](#listing-transactions)
     - [Canceling a transaction](#canceling-a-transaction)
     - [Sending a transaction](#sending-a-transaction)
     - [Finalizing a transaction](#finalizing-a-transaction)
     - [Posting a transaction](#posting-a-transaction)
+  - [Retrieving last known height](#retrieving-last-known-height)
   - [Extras](#extras)
     - [Create an account inside a wallet](#create-an-account-inside-a-wallet)
     - [Setting the active account](#setting-the-active-account)
@@ -314,7 +315,11 @@ You should see something like this next:
 
 This is the shared key and will be used then to encrypt and decrypt the parameters and the responses with the API. This `shared_secret`key will be use to encrypt and decrypt the API calls and response. This must be done every time you start the owner API.
 
-## Creating a wallet
+## Wallets in Grin
+
+A wallet is where you keep your private keys, which keeps your crypto assets safe and accessible. With a wallet, you can also send, receive, and spend your coins.
+
+### Creating a wallet
 
 Now, we are ready to create a wallet. Remember that the wallet information will be stored in the directory set in the previous step by calling the `set_top_level_directory` method or in `~/.grin/$CHAIN/wallet_data` by default if `set_top_level_directory` has not been called. In order to create a wallet we will need to call: [`create_wallet`](https://docs.rs/grin_wallet_api/4.0.0/grin_wallet_api/trait.OwnerRpc.html#tymethod.create_wallet), which parameters are the next:
 
@@ -345,7 +350,7 @@ You should see something like this:
 drwxr-xr-x  5 david  staff   160B Jul 10 16:20 wallet_data
 ```
 
-## Opening a wallet
+### Opening a wallet
 
 Now that the wallet is created, we can open it. This means that we can interact with the wallet. In order to do so we need a `token`, this token will be used as a parameter for those calls that are related to the wallet. To get this token we need to call the `open_wallet` method with the next parameters:
 
@@ -379,58 +384,7 @@ $ cat .wallet_token
 
 We need the token to execute most of the call within the Owner API.
 
-## Retrieving last known height
-
-To retrieves the last known height known by the wallet we need to call the `node_height` method. This is determined as follows:
-
-- If the wallet can successfully contact its configured node, the reported node height is returned, and the updated_from_node field in the response is true
-- If the wallet cannot contact the node, this function returns the maximum height of all outputs contained within the wallet, and the updated_from_node fields in the response is set to false.
-
-Clients should generally ensure the `updated_from_node` field is returned as true before assuming the height for any operation.
-
-The only parameter required is `token` and the structure of the call is like this:
-
-```json
-{
-    "jsonrpc": "2.0",
-    "method": "node_height",
-    "params": {
-        "token": "d202964900000000d302964900000000d402964900000000d502964900000000"
-    },
-    "id": 1
-}
-```
-
-You can also use the bash script included inside this repository:
-
-```bash
-./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
-```
-
-Output:
-
-```json
-{
-  "header_hash": "000071a9ff3bf8bcee8106597efb5d672346d49b5d2c7197873c75a756b9fc78",
-  "height": "1825812",
-  "updated_from_node": true
-}
-```
-
-If you want to parse the output to save the values in separated variables, you can do that by using `jq`:
-
-```bash
-read header_hash height updated_from_node < <(echo $(./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.header_hash, .height, .updated_from_node'))
-```
-
-To confirm we just need to echo the variables:
-
-```text
-$ echo $header_hash $height $updated_from_node
-0001a006818e60dca117b22ee7df973330e260eb37bd74197e4e84490af138f0 1825828 true
-```
-
-## Getting wallet balance
+### Obtaining wallet balance
 
 To get the summary information from the active account in the wallet the method name is: `retrieve_summary_info`. The parameters are: `token`, `refresh_from_node` and `minimum_confirmations`:
 
@@ -507,7 +461,7 @@ $ echo $spendable
 0
 ```
 
-## Getting the wallet address (Slatepack Address)
+### Getting the wallet address (Slatepack Address)
 
 A Slatepack address is a bech32 encoded address, similar to those used in Bitcoin. However, Slatepack addresses do not touch the network; they are used strictly for transaction building between two wallets, and never appear on-chain or represent ownership. Addresses are exchanged between parties to serve as instructions for how to complete the payment. Therefore, a Slatepack address serves a double purpose:
 
@@ -572,7 +526,7 @@ Output:
 grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
 ```
 
-## Grin's Transactions
+## Working with transactions
 
 Mimblewimble transactions are interactive, meaning both parties need some kind of communication to interact with each other and exchange the necessary data to create a transaction. Let's see how a standard transaction flow looks like:
 
@@ -912,6 +866,59 @@ Transactions need to be broadcasted. For this we need to call the `post_tx` meth
 
 ```bash
 ./scripts/bash/$CHAIN/post_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) finalized.slate.json
+```
+
+Now the transaction is complete.
+
+## Retrieving last known height
+
+To retrieves the last known height known by the wallet we need to call the `node_height` method. This is determined as follows:
+
+- If the wallet can successfully contact its configured node, the reported node height is returned, and the updated_from_node field in the response is true
+- If the wallet cannot contact the node, this function returns the maximum height of all outputs contained within the wallet, and the updated_from_node fields in the response is set to false.
+
+Clients should generally ensure the `updated_from_node` field is returned as true before assuming the height for any operation.
+
+The only parameter required is `token` and the structure of the call is like this:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "node_height",
+    "params": {
+        "token": "d202964900000000d302964900000000d402964900000000d502964900000000"
+    },
+    "id": 1
+}
+```
+
+You can also use the bash script included inside this repository:
+
+```bash
+./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token)
+```
+
+Output:
+
+```json
+{
+  "header_hash": "000071a9ff3bf8bcee8106597efb5d672346d49b5d2c7197873c75a756b9fc78",
+  "height": "1825812",
+  "updated_from_node": true
+}
+```
+
+If you want to parse the output to save the values in separated variables, you can do that by using `jq`:
+
+```bash
+read header_hash height updated_from_node < <(echo $(./scripts/bash/$CHAIN/node_height.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) | jq -r '.header_hash, .height, .updated_from_node'))
+```
+
+To confirm we just need to echo the variables:
+
+```text
+$ echo $header_hash $height $updated_from_node
+0001a006818e60dca117b22ee7df973330e260eb37bd74197e4e84490af138f0 1825828 true
 ```
 
 ## Extras
