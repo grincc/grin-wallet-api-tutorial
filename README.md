@@ -60,7 +60,7 @@ export CHAIN="test"
 Before continuing with this tutorial, please clone this repository:
 
 ```bash
-git clone https://github.com/grincc/tutorial.git
+git clone https://github.com/grincc/grin-wallet-api-tutorial.git
 ```
 
 Move inside the folder:
