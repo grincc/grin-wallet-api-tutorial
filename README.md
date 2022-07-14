@@ -28,6 +28,7 @@
     - [Setting the top level directory](#setting-the-top-level-directory)
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
     - [Getting stored transactions](#getting-stored-transactions)
+  - [Contributors](#contributors)
 
 ## Introduction
 
@@ -1067,3 +1068,13 @@ Example:
 ```bash
 ./scripts/bash/$CHAIN/get_stored_tx.sh.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "b0b35789-4e91-4344-9c8a-10a7c1fa7cff"
 ```
+
+## Contributors
+
+Author:
+
+- [davidtavarez](https://github.com/davidtavarez)
+
+Editors:
+
+- [jaw709](https://github.com/jaw709)
