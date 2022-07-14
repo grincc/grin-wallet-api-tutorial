@@ -1,6 +1,6 @@
-# Communicating securely with grin-wallet API
+# grin-wallet APIs Tutorial
 
-- [Communicating securely with grin-wallet API](#communicating-securely-with-grin-wallet-api)
+- [grin-wallet APIs Tutorial](#grin-wallet-apis-tutorial)
   - [Introduction](#introduction)
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
@@ -13,10 +13,11 @@
   - [Retrieving last known height](#retrieving-last-known-height)
   - [Getting wallet balance](#getting-wallet-balance)
   - [Getting the wallet address (Slatepack Address)](#getting-the-wallet-address-slatepack-address)
-  - [Receiving a transaction](#receiving-a-transaction)
-  - [Listing transactions](#listing-transactions)
-  - [Canceling a transaction](#canceling-a-transaction)
-  - [Sending a transaction](#sending-a-transaction)
+  - [Grin's Transactions](#grins-transactions)
+    - [Receiving a transaction](#receiving-a-transaction)
+    - [Listing transactions](#listing-transactions)
+    - [Canceling a transaction](#canceling-a-transaction)
+    - [Sending a transaction](#sending-a-transaction)
     - [Finalizing a transaction](#finalizing-a-transaction)
     - [Posting a transaction](#posting-a-transaction)
   - [Extras](#extras)
@@ -571,7 +572,27 @@ Output:
 grin1ndv4p79f4l39q2khe4f09zql2ed9kjy2emlv042q6e2v5r8cdk6s6r70rf
 ```
 
-## Receiving a transaction
+## Grin's Transactions
+
+Mimblewimble transactions are interactive, meaning both parties need some kind of communication to interact with each other and exchange the necessary data to create a transaction. Let's see how a standard transaction flow looks like:
+
+![Flow](https://docs.grin.mw/assets/images/tx-flow.png)
+
+The slate is a sheet of incomplete transaction data. Wallets transfer it back and forth until the full signature is complete.
+
+In more detail, the process goes as follows:
+
+- An address, often referred to as a Slatepack Address, is provided by the receiver.
+  It is important to note; This slatepack address is only used to support peer-to-peer interaction, and is completely different from the familiar on-chain address, as it's not part of the ledger. It is in fact an ed25199 public key which serves a double role:
+  - A Tor hidden service address.
+  - Key to encrypt the data communicated between the sender and receiver.
+- Sender begins building the transaction slate, encrypts it with the receiver's address (a public key), and passes it over.
+- Receiver adds to the slate his own data and partial signature, and delivers it back.
+- Sender finalizes the transaction by adding the final data and his own part partial signature to the slate, thus completing the transaction building process. He can then post it to the chain.
+
+See more at the [Grin Documentation](https://docs.grin.mw/about-grin/transactions/)
+
+### Receiving a transaction
 
 A Slate contains its own separate representation of Grin's internal Transaction object, this object is encoded within the Slatepack Message therefore the first step is to decode the slatepack. To get the Slate from the Slatepack Message, we need to call `slate_from_slatepack_message` like this:
 
@@ -684,7 +705,7 @@ Example:
 
 This generated Slatepack Message must then be shared with the Sender.
 
-## Listing transactions
+### Listing transactions
 
 The `retrieve_txs` method returns a list of Transaction Log Entries from the active account in the wallet. Parameters are the follow:
 
@@ -739,7 +760,7 @@ Output:
 ]
 ```
 
-## Canceling a transaction
+### Canceling a transaction
 
 In order to cancel a transaction we could use the transaction slate id as a parameter for the `cancel_tx` method like this:
 
@@ -790,7 +811,7 @@ $ ./scripts/bash/$CHAIN/retrieve_txs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(c
 ]
 ```
 
-## Sending a transaction
+### Sending a transaction
 
 The API method to start a transaction is: `init_send_tx`. This initiate a new transaction as the sender, creating a new Slate object containing the sender's inputs, change outputs, and public signature data. When a transaction is created, the wallet must also lock inputs (and create unconfirmed outputs) corresponding to the transaction created in the slate, so that the wallet doesn't attempt to re-spend outputs that are already included in a transaction before the transaction is confirmed.
 
