@@ -40,7 +40,7 @@ This document will define the basis of proper communication with the grin-wallet
 
 JSON-RPC requests should be encrypted using these parameters, encoded into base64 and included with the one-time nonce.
 
-Before starting make sure you have installed the next tools: ``` openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5 ```
+Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5```
 
 This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intend to use `Testnet` the value of `$CHAIN` must be `test`, but if you are using `Mainnet`, the value must be `main`:
 
@@ -55,6 +55,20 @@ For Testnet:
 ```bash
 export CHAIN="test"
 ```
+
+Before continuing with this tutorial, please clone this repository:
+
+```bash
+git clone https://github.com/grincc/tutorial.git
+```
+
+Move inside the folder:
+
+```bash
+cd tutorial
+```
+
+Now we can start.
 
 ## Installing the latest version of grin wallet and node
 
