@@ -4,6 +4,6 @@ relative_links:
   collections: true
 include:
   - README.md
-title: Grin wallet API tutorial
+title: Using the Grin wallet API
 description: A basic introduction on how to properly communicate with the grin-wallet API
 show_downloads: false
