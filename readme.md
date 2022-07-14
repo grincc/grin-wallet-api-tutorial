@@ -1,6 +1,6 @@
-# grin-wallet APIs Tutorial
+# Grin wallet APIs Tutorial
 
-- [grin-wallet APIs Tutorial](#grin-wallet-apis-tutorial)
+- [Grin wallet APIs Tutorial](#grin-wallet-apis-tutorial)
   - [Introduction](#introduction)
   - [Installing the latest version of grin wallet and node](#installing-the-latest-version-of-grin-wallet-and-node)
   - [Starting node and wallet APIs](#starting-node-and-wallet-apis)
