@@ -1,4 +1,4 @@
-# Grin wallet API Tutorial
+# Grin wallet API
 
 - [Grin wallet API Tutorial](#grin-wallet-api-tutorial)
   - [Introduction](#introduction)
