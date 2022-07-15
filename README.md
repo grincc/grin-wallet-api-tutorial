@@ -149,7 +149,7 @@ If you want to run your node in a separate server from the wallet (which is reco
 api_http_addr = "0.0.0.0:3413"
 ```
 
-NOTE: Be aware that you probably will need to properly configure your firewall
+NOTE: Be aware that you will probably need to properly configure your firewall.
 
 Next, create a file here: `/etc/.grinconf` with this content for Mainnet:
 
@@ -196,7 +196,7 @@ We can check the status like this:
 systemctl status grin.node.service
 ```
 
-You see will now the status:
+You will now see the status:
 
 ```text
 grin.node.service - Grin Node Service
