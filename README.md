@@ -28,6 +28,7 @@
     - [Setting the top level directory](#setting-the-top-level-directory)
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
     - [Getting stored transactions](#getting-stored-transactions)
+    - [Getting Foreign API verion](#getting-foreign-api-verion)
   - [Contributors](#contributors)
 
 ## Introduction
@@ -41,7 +42,7 @@ This document will define the basis of proper communication with the grin-wallet
 
 JSON-RPC requests should be encrypted using these parameters, encoded into base64 and included with the one-time nonce.
 
-Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5, torsocks, php```
+Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5, httpie, php```
 
 This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intend to use `Testnet` the value of `$CHAIN` must be `test`, but if you are using `Mainnet`, the value must be `main`:
 
@@ -1079,6 +1080,25 @@ Example:
 
 ```bash
 ./scripts/bash/$CHAIN/get_stored_tx.sh.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "b0b35789-4e91-4344-9c8a-10a7c1fa7cff"
+```
+
+### Getting Foreign API verion
+
+`check_version` return the version capabilities of the running ForeignApi Node:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "check_version",
+    "id": 1,
+    "params": { }
+}
+```
+
+Example:
+
+```bash
+./scripts/bash/check_version.sh "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5"
 ```
 
 ## Contributors
