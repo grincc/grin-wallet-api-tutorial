@@ -899,7 +899,7 @@ $ ./scripts/bash/$CHAIN/retrieve_summary_info.sh $(cat ~/.grin/$CHAIN/.shared_se
 Now we pass the slate to the `finalize_tx` method to finalize the transaction.
 
 ```bash
-./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json > finalized.slate.json
+./scripts/bash/$CHAIN/finalize_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate_to_finalize.json > finalized.slate.json
 ```
 
 The returned slate must now be [posted](#posting-a-transaction).
