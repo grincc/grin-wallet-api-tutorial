@@ -844,7 +844,7 @@ Now we can use this address to send the slate to the receiver. The name of the m
 Example:
 
 ```bash
-./scripts/bash/foreign/receive_tx.sh "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5" slate.json
+./scripts/bash/foreign/receive_tx.sh "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5" slate.json > slate_to_finalize.json
 ```
 
 #### Preparing slate to be sent (Slate > Slatepack Message)
