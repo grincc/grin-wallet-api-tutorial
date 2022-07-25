@@ -1084,14 +1084,14 @@ Example:
 
 ### Getting Foreign API verion
 
-`check_version` return the version capabilities of the running ForeignApi Node:
+`check_version` return the version capabilities of the running Foreign API of a wallet:
 
 ```json
 {
     "jsonrpc": "2.0",
     "method": "check_version",
     "id": 1,
-    "params": { }
+    "params": {}
 }
 ```
 
