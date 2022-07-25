@@ -30,7 +30,7 @@
     - [Setting the top level directory](#setting-the-top-level-directory)
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
     - [Getting stored transactions](#getting-stored-transactions)
-    - [Getting Foreign API verion](#getting-foreign-api-verion)
+    - [Getting Foreign API version](#getting-foreign-api-version)
   - [Contributors](#contributors)
 
 ## Introduction
@@ -1098,7 +1098,7 @@ Example:
 ./scripts/bash/$CHAIN/get_stored_tx.sh.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "b0b35789-4e91-4344-9c8a-10a7c1fa7cff"
 ```
 
-### Getting Foreign API verion
+### Getting Foreign API version
 
 `check_version` return the version capabilities of the running Foreign API of a wallet:
 
