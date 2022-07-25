@@ -41,7 +41,7 @@ This document will define the basis of proper communication with the grin-wallet
 
 JSON-RPC requests should be encrypted using these parameters, encoded into base64 and included with the one-time nonce.
 
-Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5```
+Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3, libncursesw5, torsocks, php```
 
 This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intend to use `Testnet` the value of `$CHAIN` must be `test`, but if you are using `Mainnet`, the value must be `main`:
 
@@ -123,7 +123,7 @@ For Testnet:
 grin-wallet --testnet owner_api --run_foreign
 ```
 
-The Owner API is intended to expose methods that are to be used by the wallet owner only; the Foreign API contains methods that other wallets will use to interact with the owner's wallet.
+The [Owner API](https://docs.rs/grin_wallet_api/latest/grin_wallet_api/trait.OwnerRpc.html) is intended to expose methods that are to be used by the wallet owner only; the [Foreign API](https://docs.rs/grin_wallet_api/latest/grin_wallet_api/trait.ForeignRpc.html) contains methods that other wallets will use to interact with the owner's wallet.
 
 Use the third tabs to go through the next steps.
 
@@ -800,7 +800,7 @@ The JSON structure of the call looks as follows:
             "num_change_outputs": 1,
             "selection_strategy_is_use_all": true,
             "target_slate_version": null,
-            "payment_proof_recipient_address": "tgrin1xtxavwfgs48ckf3gk8wwgcndmn0nt4tvkl8a7ltyejjcy2mc6nfs9gm2lp",
+            "payment_proof_recipient_address": "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5",
             "ttl_blocks": null,
             "send_args": null
         }
@@ -820,7 +820,19 @@ Example of sending 0.1 grins:
 ./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
-The slate should be encoded now `create_slatepack_message` which creates a Slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
+This slate can be sent to the receiving party by any means via TOR. In order to do send it, you need to decode the Onion address from the grin1 address and use the Foreign API. The next script will return the complete URL of the receiver's Foreign API, example:
+
+```bash
+php scripts/php/grin1.php -a grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5
+```
+
+This will print something like this:
+
+```text
+http://fjf2tjne76wsaq7aiusrj42fzst4hktczo7tyvn4zxiqqirzflmljmyd.onion/v2/foreign
+```
+
+If the receiver is not recheable via TOR, the slate should be encoded now `create_slatepack_message` which creates a Slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
 
 Example:
 
