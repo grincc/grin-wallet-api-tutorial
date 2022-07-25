@@ -18,6 +18,8 @@
     - [Listing transactions](#listing-transactions)
     - [Canceling a transaction](#canceling-a-transaction)
     - [Sending a transaction](#sending-a-transaction)
+      - [Sending slates via the Foreign API using TOR](#sending-slates-via-the-foreign-api-using-tor)
+      - [Preparing slate to be sent (Slate > Slatepack Message)](#preparing-slate-to-be-sent-slate--slatepack-message)
     - [Finalizing a transaction](#finalizing-a-transaction)
     - [Posting a transaction](#posting-a-transaction)
   - [Retrieving last known height](#retrieving-last-known-height)
@@ -821,7 +823,11 @@ Example of sending 0.1 grins:
 ./scripts/bash/$CHAIN/init_send_tx.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) "default" $((0.1 * ((10 ** 9)))) grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5 > slate.json
 ```
 
-This slate can be sent to the receiving party by any means via TOR. In order to do send it, you need to decode the Onion address from the grin1 address and use the Foreign API. The next script will return the complete URL of the receiver's Foreign API, example:
+This slate can be sent to the receiving party by any means via TOR.
+
+#### Sending slates via the Foreign API using TOR
+
+In order to do send it, you need to decode the Onion address from the grin1 address and use the Foreign API. The next script will return the complete URL of the receiver's Foreign API, example using the receiver address:
 
 ```bash
 php scripts/php/grin1.php -a grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5
@@ -832,6 +838,16 @@ This will print something like this:
 ```text
 http://fjf2tjne76wsaq7aiusrj42fzst4hktczo7tyvn4zxiqqirzflmljmyd.onion/v2/foreign
 ```
+
+Now we can use this address to send the slate to the receiver. The name of the method is `receive_tx`, this method recieve a tranaction created by another party, returning the modified Slate object, modified with the recipient's output for the transaction amount, and public signature data. This slate can then be sent back to the sender to finalize the transaction via the Owner API's [`finalize_tx`](#finalizing-a-transaction) method.
+
+Example:
+
+```bash
+./scripts/bash/receive_tx.sh "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5" slate.json
+```
+
+#### Preparing slate to be sent (Slate > Slatepack Message)
 
 If the receiver is not recheable via TOR, the slate should be encoded now `create_slatepack_message` which creates a Slatepack from a given slate, optionally encoding the slate with the provided recipient public keys.
 
