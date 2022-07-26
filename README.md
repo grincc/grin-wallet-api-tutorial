@@ -217,7 +217,7 @@ grin.node.service - Grin Node Service
 A virtual environment is a Python environment such that the Python interpreter, libraries and scripts installed into it are isolated from those installed in other virtual environments, and (by default) any libraries installed in a "system" Python, i.e., one which is installed as part of your operating system. In order to create a virtual environment, run the next command:
 
 ```bash
-python3 -m virtualenv .venv
+python3 -m virtualenv --python=python3.8 .venv
 ```
 
 After that, proceed to activate the recently created environment:
