@@ -31,6 +31,7 @@
     - [Getting the wallet seed phrase or recovery phrase](#getting-the-wallet-seed-phrase-or-recovery-phrase)
     - [Getting stored transactions](#getting-stored-transactions)
     - [Getting Foreign API version](#getting-foreign-api-version)
+    - [Finalizing transaction using Foreign API](#finalizing-transaction-using-foreign-api)
   - [Contributors](#contributors)
 
 ## Introduction
@@ -876,7 +877,7 @@ First, we need to get the slate from the Slatepack Message:
 Now we need to lock the outputs associated with the inputs to the transaction by using the `tx_lock_outputs` method.
 
 ```bash
-./scripts/bash/$CHAIN/tx_lock_outputs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate.json
+./scripts/bash/$CHAIN/tx_lock_outputs.sh $(cat ~/.grin/$CHAIN/.shared_secret) $(cat ./.wallet_token) slate_to_finalize.json
 ```
 
 If we now get the wallet summary, we should see the amount (including fees) awaiting to be finalized:
@@ -1115,6 +1116,58 @@ Example:
 
 ```bash
 ./scripts/bash/foreign/check_version.sh "grin19f96nfdyl7kjqslqg5j3fu69ejnu82nzewlnc4duehgssg3e9tvq0fsuj5"
+```
+
+### Finalizing transaction using Foreign API
+
+`finalize_tx` finalizes a (standard or invoice) transaction initiated by this wallet’s Owner api. This step assumes the paying party has completed round 1 and 2 of slate creation, and added their partial signatures. This wallet will verify and add their partial sig, then create the finalized transaction, ready to post to a node.
+
+This function posts to the node. Posting can be also done in separately via the `post_tx` function.
+
+This function also stores the final transaction in the user's wallet files for retrieval via the `get_stored_tx` function.
+
+```json
+{
+   "jsonrpc":"2.0",
+   "method":"finalize_tx",
+   "id":1,
+   "params":[
+      {
+         "ver":"4:2",
+         "id":"0436430c-2b02-624c-2032-570501212b00",
+         "sta":"I2",
+         "off":"383bc9df0dd332629520a0a72f8dd7f0e97d579dccb4dbdc8592aa3d424c846c",
+         "fee":"23500000",
+         "sigs":[
+            {
+               "xs":"02e3c128e436510500616fef3f9a22b15ca015f407c8c5cf96c9059163c873828f",
+               "nonce":"031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f",
+               "part":"8f07ddd5e9f5179cff19486034181ed76505baaad53e5d994064127b56c5841be7bf31d80494f5e4a3d656649b1610c61a268f9cafcfc604b5d9f25efb2aa3c5"
+            }
+         ],
+         "coms":[
+            {
+               "f":1,
+               "c":"087df32304c5d4ae8b2af0bc31e700019d722910ef87dd4eec3197b80b207e3045"
+            },
+            {
+               "f":1,
+               "c":"08e1da9e6dc4d6e808a718b2f110a991dd775d65ce5ae408a4e1f002a4961aa9e7"
+            },
+            {
+               "c":"09ede20409d5ae0d1c0d3f3d2c68038a384cdd6b7cc5ca2aab670f570adc2dffc3",
+               "p":"6d86fe00220f8c6ac2ad4e338d80063dba5423af525bd273ecfac8ef6b509192732a8cd0c53d3313e663ac5ccece3d589fd2634e29f96e82b99ca6f8b953645a005d1bc73493f8c41f84fb8e327d4cbe6711dba194a60db30700df94a41e1fda7afe0619169389f8d8ee12bddf736c4bc86cd5b1809a5a27f195209147dc38d0de6f6710ce9350f3b8e7e6820bfe5182e6e58f0b41b82b6ec6bb01ffe1d8b3c2368ebf1e31dfdb9e00f0bc68d9119a38d19c038c29c7b37e31246e7bba56019bc88881d7d695d32557fc0e93635b5f24deffefc787787144e5de7e86281e79934e7e20d9408c34317c778e6b218ee26d0a5e56b8b84a883e3ddf8603826010234531281486454f8c2cf3fee074f242f9fc1da3c6636b86fb6f941eb8b633d6e3b3f87dfe5ae261a40190bd4636f433bcdd5e3400255594e282c5396db8999d95be08a35be9a8f70fdb7cf5353b90584523daee6e27e208b2ca0e5758b8a24b974dca00bab162505a2aa4bcefd8320f111240b62f861261f0ce9b35979f9f92da7dd6989fe1f41ec46049fd514d9142ce23755f52ec7e64df2af33579e9b8356171b91bc96b875511bef6062dd59ef3fe2ddcc152147554405b12c7c5231513405eb062aa8fa093e3414a144c544d551c4f1f9bf5d5d2ff5b50a3f296c800907704bed8d8ee948c0855eff65ad44413af641cdc68a06a7c855be7ed7dd64d5f623bbc9645763d48774ba2258240a83f8f89ef84d21c65bcb75895ebca08b0090b40aafb7ddef039fcaf4bad2dbbac72336c4412c600e854d368ed775597c15d2e66775ab47024ce7e62fd31bf90b183149990c10b5b678501dbac1af8b2897b67d085d87cab7af4036cba3bdcfdcc7548d7710511045813c6818d859e192e03adc0d6a6b30c4cbac20a0d6f8719c7a9c3ad46d62eec464c4c44b58fca463fea3ce1fc51"
+            }
+         ]
+      }
+   ]
+}
+```
+
+Example:
+
+```bash
+./scripts/bash/foreign/finalize_tx.sh slate_to_finalize
 ```
 
 ## Contributors
