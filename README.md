@@ -44,7 +44,7 @@ This document will define the basis of proper communication with the grin-wallet
 
 JSON-RPC requests should be encrypted using these parameters, encoded into base64 and included with the one-time nonce.
 
-Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3.8, libncursesw5, httpie, php```
+Before starting make sure you have installed the next tools: ```git, openssl, wget, curl, sha256sum, tar, tor, wget, python3.8, libncursesw5, php```
 
 This document assumes that you are **running Linux**. You will need to create a `$CHAIN` variable in your environment, if you intend to use `Testnet` the value of `$CHAIN` must be `test`, but if you are using `Mainnet`, the value must be `main`:
 
